@@ -21,9 +21,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/fetchBtn"
-        app:layout_constraintLeft_toRightOf="@id/editText"
+        app:layout_constraintLeft_toRightOf="@id/btnStop"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnStop"
+        android:text="stop"
+        app:layout_constraintLeft_toRightOf="@id/editText"
+        app:layout_constraintRight_toLeftOf="@+id/btnFetch"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 
 

@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private List<String> selectedBitmap = new ArrayList<>();
     private List<Bitmap> myBitmaps;
     private Button start;
+    private Button stop;
     private Thread bkgdThread;
 
 
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         start = findViewById(R.id.start_btn);
         start.setVisibility(View.GONE);
         start.setEnabled(false);
+        stop = findViewById(R.id.btnStop);
 
         fetch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +137,24 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 bkgdThread.start();
+            }
+        });
+        // after interrupt, bkgdThread is dead but don't know why it still downloading the photos
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bkgdThread != null){
+                    System.out.println("have back thread");
+                    bkgdThread.interrupt();
+                    Toast.makeText(MainActivity.this,"Cancelled Fetching",Toast.LENGTH_SHORT).show();
+                    if(bkgdThread.isAlive()){
+                        System.out.println("alive");
+                        bkgdThread.interrupt();
+                    }
+                    else{
+                        System.out.println("dead");
+                    }
+                }
             }
         });
         start.setOnClickListener(new View.OnClickListener() {
@@ -247,6 +267,10 @@ public class MainActivity extends AppCompatActivity {
         androidx.gridlayout.widget.GridLayout myGrid = findViewById(R.id.grid_layout);
 
         for (int i = 0; i < myBitmaps.size(); i++) {
+            if(Thread.interrupted()){
+                Toast.makeText(this, "Failed Download", Toast.LENGTH_SHORT).show();
+                return;
+            }
             ImageView imageview = new ImageView(this);
             //how to set the width and height dynamically?
             imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(300,300));
