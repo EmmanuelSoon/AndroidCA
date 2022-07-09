@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     //private ProgressBar bar;
     private String urlInput;
     //private GridLayout myGridLayout;
-    private ImageView imv1;
+    //private ImageView imv1;
 
 
     @Override
@@ -148,22 +148,22 @@ public class MainActivity extends AppCompatActivity {
 
     protected void setViews(List<Bitmap> myBitmaps) {
         //sorry if this is confusing, i kept the id name grid_layout so i don't have to change so much code
-        imv1 = findViewById(R.id.grid_layout);
-        imv1.setImageBitmap(myBitmaps.get(0));
+//        imv1 = findViewById(R.id.grid_layout);
+//        imv1.setImageBitmap(myBitmaps.get(0));
 
 
 // uncomment here, and in activity_main for the gridlayout
+        androidx.gridlayout.widget.GridLayout myGrid = findViewById(R.id.grid_layout);
 
-//        for (int i =0; i < myBitmaps.size(); i++){
-//            ImageView imageview = new ImageView(this);
-//            GridLayout.LayoutParams  layoutParams = new GridLayout.LayoutParams();
-//            layoutParams.width = myGridLayout.getMeasuredWidth()/4;
-//            layoutParams.height = myGridLayout.getMeasuredHeight()/5;
-//            imageview.setLayoutParams(layoutParams);
-//            imageview.setImageBitmap(myBitmaps.get(i));
-//
-//
-//        }
+        for (int i =0; i < myBitmaps.size(); i++){
+            ImageView imageview = new ImageView(this);
+            //how to set the width and height dynamically?
+            imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(300,300));
+            imageview.setImageBitmap(myBitmaps.get(i));
+            myGrid.addView(imageview);
+
+       }
     }
+
 
 }
