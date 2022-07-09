@@ -82,8 +82,12 @@ public class MainActivity extends AppCompatActivity {
                     bkgdThread.interrupt();
                     cleanUp();
                 }
+                String urlInput = textInput.getText().toString();
 
-                urlInput = textInput.getText().toString();
+                if(!isUrl(urlInput)){
+                    Toast.makeText(MainActivity.this, "Wrong URL", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 //creating progress bar dialog
                 progressBar = new ProgressDialog(v.getContext());
@@ -225,6 +229,18 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.dismiss();
             }
         }
+    }
+
+    protected boolean isUrl(String url){
+        try{
+            if (!url.isEmpty() && url.contains("https")) {
+                return true;
+            }
+        }
+        catch(Exception e){
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     protected void setViews(List<Bitmap> myBitmaps) {
