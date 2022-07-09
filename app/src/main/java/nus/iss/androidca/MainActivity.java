@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 progressBarStatus = 0;
                 imgCount = 0;
 
-                bkgdThread new Thread(new Runnable(){
+                bkgdThread = new Thread(new Runnable(){
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void run() {
@@ -138,11 +138,10 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Toast msg;
-                                if(downloaded){
+                                if (downloaded) {
                                     msg = Toast.makeText(MainActivity.this,
                                             "Download Success", Toast.LENGTH_LONG);
-                                }
-                                else {
+                                } else {
                                     msg = Toast.makeText(MainActivity.this,
                                             "Download Failed", Toast.LENGTH_LONG);
                                 }
@@ -153,6 +152,8 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }).start();
+            }
+        });
 
 
     }
