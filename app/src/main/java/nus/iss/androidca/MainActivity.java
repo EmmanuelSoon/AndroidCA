@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (bkgdThread != null){
                     bkgdThread.interrupt();
+                    cleanUp();
                 }
 
                 urlInput = textInput.getText().toString();
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                setViews(bitmaps);
+                                setViews(myBitmaps);
                             }
                         });
 
@@ -227,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void setViews(List<Bitmap> myBitmaps) {
-        //don't forget to clear the list of tags
         androidx.gridlayout.widget.GridLayout myGrid = findViewById(R.id.grid_layout);
 
         for (int i = 0; i < myBitmaps.size(); i++) {
@@ -289,6 +289,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return true;
+
+    }
+
+    protected void cleanUp(){
+        myBitmaps.clear();
+        selectedBitmap.clear();
 
     }
 
