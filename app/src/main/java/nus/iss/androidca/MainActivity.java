@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressDialog progressBar;
     private int progressBarStatus = 0;
+    private int fileCount = 0;
     private Handler processBarHandler = new Handler();
-    private int imgCount = 0;
 
     private String urlInput;
     //private GridLayout myGridLayout;
@@ -77,35 +77,19 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setMessage("Fetching Images ...");
                 progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 progressBar.setProgress(0);
-                progressBar.setMax(100);
+                progressBar.setMax(20);
                 progressBar.show();
 
-                //rest progress bar and filesize status
+                //reset progress bar and filesize status
                 progressBarStatus = 0;
-                imgCount = 0;
+                fileCount = 0;
 
                 new Thread(new Runnable() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void run() {
                         List<Bitmap> bitmaps = scrapeUrlsForBitmaps(urlInput);
-                        while (progressBarStatus < 100) {
 
-                            progressBarStatus = (int) bitmaps.stream().count() * 5;
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            processBarHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressBar.setProgress(progressBarStatus);
-                                }
-                            });
-
-
-                        }
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -113,15 +97,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
-
-                        if (progressBarStatus >= 100) {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            progressBar.dismiss();
-                        }
                     }
                 }).start();
             }
@@ -146,22 +121,51 @@ public class MainActivity extends AppCompatActivity {
                 .collect(Collectors.toList());
 
         List<Bitmap> bitmaps = new ArrayList<>();
+        int fileCount = 0;
         for (String imgURL : urls) {
-
             try {
                 URL url = new URL(imgURL);
                 URLConnection conn = url.openConnection();
                 InputStream input = conn.getInputStream();
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
                 bitmaps.add(myBitmap);
+                fileCount++;
+                fetchProgressBar(fileCount);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
         return bitmaps;
     }
+
+    public void fetchProgressBar(int fileCount){
+        if (progressBarStatus < 20) {
+
+            progressBarStatus = fileCount;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            processBarHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setProgress(progressBarStatus);
+                }
+            });
+
+            if (progressBarStatus >= 20) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                progressBar.dismiss();
+            }
+        }
+    }
+
 
     protected boolean downloadImage(String imgURL, File file) {
         try {
