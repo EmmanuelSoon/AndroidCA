@@ -4,7 +4,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
-import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -25,6 +24,7 @@ import androidx.gridlayout.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressDialog progressBar;
     private int progressBarStatus = 0;
+    private int fileCount = 0;
     private Handler processBarHandler = new Handler();
-    private int imgCount = 0;
 
     private String urlInput;
     private List<String> selectedBitmap = new ArrayList<>();
@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         textInput = findViewById(R.id.editText);
         fetch = findViewById(R.id.btnFetch);
@@ -91,40 +90,47 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setMessage("Fetching Images ...");
                 progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 progressBar.setProgress(0);
-                progressBar.setMax(100);
+                progressBar.setMax(20);
                 progressBar.show();
 
-                //rest progress bar and filesize status
+                //reset progress bar and filesize status
                 progressBarStatus = 0;
-                imgCount = 0;
+                fileCount = 0;
 
                 bkgdThread = new Thread(new Runnable(){
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void run() {
                         myBitmaps = scrapeUrlsForBitmaps(urlInput);
+                        while (progressBarStatus < 100) {
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setViews(myBitmaps);
-                            }
-                        });
-
-                        if (progressBarStatus >= 100) {
+                            progressBarStatus = (int) myBitmaps.stream().count() * 5;
                             try {
                                 Thread.sleep(1000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            progressBar.dismiss();
+                            processBarHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setProgress(progressBarStatus);
+                                }
+                            });
+
+
                         }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setViews(bitmaps);
+                            }
+                        });
+
                     }
                 });
                 bkgdThread.start();
             }
         });
-
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -175,19 +180,50 @@ public class MainActivity extends AppCompatActivity {
                 .collect(Collectors.toList());
 
         List<Bitmap> bitmaps = new ArrayList<>();
-        for(String imgURL : urls){
-            try{
+        int fileCount = 0;
+        for (String imgURL : urls) {
+            try {
                 URL url = new URL(imgURL);
                 URLConnection conn = url.openConnection();
                 InputStream input = conn.getInputStream();
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
                 bitmaps.add(myBitmap);
+                fileCount++;
+                fetchProgressBar(fileCount);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         return bitmaps;
+    }
+
+    public void fetchProgressBar(int fileCount){
+        if (progressBarStatus < 20) {
+
+            progressBarStatus = fileCount;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            processBarHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setProgress(progressBarStatus);
+                }
+            });
+
+            if (progressBarStatus >= 20) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                progressBar.dismiss();
+            }
+        }
     }
 
     protected void setViews(List<Bitmap> myBitmaps) {
