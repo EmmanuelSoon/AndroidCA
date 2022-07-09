@@ -60,9 +60,12 @@ public class MainActivity extends AppCompatActivity {
     private String urlInput;
     private List<String> selectedBitmap = new ArrayList<>();
     private List<Bitmap> myBitmaps;
+    private List<Bitmap> bitmaps;
     private Button start;
     private Button stop;
     private Thread bkgdThread;
+    private androidx.gridlayout.widget.GridLayout myGrid;
+    private int count;
 
 
     @Override
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         start.setVisibility(View.GONE);
         start.setEnabled(false);
         stop = findViewById(R.id.btnStop);
+        myGrid = findViewById(R.id.grid_layout);
 
         fetch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 if (bkgdThread != null){
                     bkgdThread.interrupt();
                     cleanUp();
+
                 }
                 String urlInput = textInput.getText().toString();
 
@@ -103,12 +108,22 @@ public class MainActivity extends AppCompatActivity {
                 //reset progress bar and filesize status
                 progressBarStatus = 0;
                 fileCount = 0;
+                if(bkgdThread!=null){
+                    bkgdThread.interrupt();
+                    myGrid.removeAllViews();
+
+                    bkgdThread = null;
+                }
 
                 bkgdThread = new Thread(new Runnable(){
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void run() {
                         myBitmaps = scrapeUrlsForBitmaps(urlInput);
+                        if(Thread.interrupted()){
+                            cleanUp();
+                            return;
+                        }
                         while (progressBarStatus < 100) {
 
                             progressBarStatus = (int) myBitmaps.stream().count() * 5;
@@ -123,17 +138,7 @@ public class MainActivity extends AppCompatActivity {
                                     progressBar.setProgress(progressBarStatus);
                                 }
                             });
-
-
                         }
-                        List<Bitmap> bitmaps = scrapeUrlsForBitmaps(urlInput);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setViews(myBitmaps);
-                            }
-                        });
-
                     }
                 });
                 bkgdThread.start();
@@ -192,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     protected List<Bitmap> scrapeUrlsForBitmaps(String urlInput) {
         org.jsoup.nodes.Document doc = null;
+
         try {
             doc = Jsoup.connect(urlInput).get();
         } catch (IOException e) {
@@ -205,9 +211,16 @@ public class MainActivity extends AppCompatActivity {
                 .limit(20)
                 .collect(Collectors.toList());
 
-        List<Bitmap> bitmaps = new ArrayList<>();
+        bitmaps = new ArrayList<>();
         int fileCount = 0;
+        count =1;
         for (String imgURL : urls) {
+            if(bkgdThread.isInterrupted()){
+                Toast.makeText(this, "Interrupted Fetch again", Toast.LENGTH_SHORT).show();
+                cleanUp();
+                myGrid.removeAllViews();
+                bkgdThread=null;
+            }
             try {
                 URL url = new URL(imgURL);
                 URLConnection conn = url.openConnection();
@@ -216,6 +229,42 @@ public class MainActivity extends AppCompatActivity {
                 bitmaps.add(myBitmap);
                 fileCount++;
                 fetchProgressBar(fileCount);
+
+                //show image in gridlayout
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ImageView imageview = new ImageView(MainActivity.this);
+                        imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(300,300));
+                        imageview.setImageBitmap(myBitmap);
+                        imageview.setTag(count);
+                        imageview.isShown();
+                        myGrid.addView(imageview);
+                        count++;
+                        imageview.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                start.setVisibility(View.VISIBLE);
+                                if (selectedBitmap.contains(imageview.getTag().toString())){
+                                    imageview.clearColorFilter();
+                                    selectedBitmap.remove(imageview.getTag().toString());
+                                    if( selectedBitmap.size() < 6){
+                                        start.setEnabled(false);
+                                    }
+                                }
+                                //do a check for selected size, cannot select unless there is less than 6 items. to change when difficulty level is implemented
+                                else if (selectedBitmap.size() < 6){
+                                    selectedBitmap.add(imageview.getTag().toString());
+                                    imageview.setColorFilter(Color.argb(175,255, 255, 255));
+                                    if( selectedBitmap.size() == 6){
+                                        start.setEnabled(true);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -263,44 +312,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    protected void setViews(List<Bitmap> myBitmaps) {
-        androidx.gridlayout.widget.GridLayout myGrid = findViewById(R.id.grid_layout);
 
-        for (int i = 0; i < myBitmaps.size(); i++) {
-            if(Thread.interrupted()){
-                Toast.makeText(this, "Failed Download", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            ImageView imageview = new ImageView(this);
-            //how to set the width and height dynamically?
-            imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(300,300));
-            imageview.setImageBitmap(myBitmaps.get(i));
-            imageview.setTag(i);
-            myGrid.addView(imageview);
-            imageview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    start.setVisibility(View.VISIBLE);
-                    if (selectedBitmap.contains(imageview.getTag().toString())){
-                        imageview.clearColorFilter();
-                        selectedBitmap.remove(imageview.getTag().toString());
-                        if( selectedBitmap.size() < 6){
-                            start.setEnabled(false);
-                        }
-                    }
-    //do a check for selected size, cannot select unless there is less than 6 items. to change when difficulty level is implemented
-                    else if (selectedBitmap.size() < 6){
-                        selectedBitmap.add(imageview.getTag().toString());
-                        imageview.setColorFilter(Color.argb(175,255, 255, 255));
-                        if( selectedBitmap.size() == 6){
-                            start.setEnabled(true);
-                        }
-                    }
-                }
-            });
-
-        }
-    }
 
     protected boolean downloadImage(List<Bitmap> myBitmaps, List<String> selectedBitmap) {
 
@@ -333,8 +345,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void cleanUp(){
-        myBitmaps.clear();
-        selectedBitmap.clear();
+        if(bitmaps!=null){
+            bitmaps.clear();
+        }
+        if(myBitmaps!=null)
+            myBitmaps.clear();
+        if(selectedBitmap!=null)
+            selectedBitmap.clear();
 
     }
 
