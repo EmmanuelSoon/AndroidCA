@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                         }
+                        List<Bitmap> bitmaps = scrapeUrlsForBitmaps(urlInput);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -200,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
         return bitmaps;
     }
 
