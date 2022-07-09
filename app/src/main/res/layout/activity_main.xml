@@ -9,7 +9,7 @@
     <EditText
         android:id="@+id/editText"
         android:layout_width="0dp"
-
+        android:hint="@string/urlPrompt"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/grid_layout"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -20,10 +20,11 @@
         android:id="@+id/btnFetch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fetch"
+        android:text="@string/fetchBtn"
         app:layout_constraintLeft_toRightOf="@id/editText"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 
     <androidx.gridlayout.widget.GridLayout
@@ -31,7 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@id/progress_bar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editText"

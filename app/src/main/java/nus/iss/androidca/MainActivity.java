@@ -3,6 +3,8 @@ package nus.iss.androidca;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,12 +13,15 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.GridLayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
+
 import androidx.gridlayout.widget.GridLayout;
+
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -37,6 +42,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -44,7 +51,12 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText textInput;
     private Button fetch;
-    //private ProgressBar bar;
+
+    private ProgressDialog progressBar;
+    private int progressBarStatus = 0;
+    private Handler processBarHandler = new Handler();
+    private int imgCount = 0;
+
     private String urlInput;
     private List<String> selectedBitmap = new ArrayList<>();
     private List<Bitmap> myBitmaps;
@@ -64,10 +76,6 @@ public class MainActivity extends AppCompatActivity {
         start.setVisibility(View.GONE);
         start.setEnabled(false);
 
-        //bar = findViewById(R.id.progress_bar);
-        //bar.setMax(100);
-
-
         fetch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,11 +85,23 @@ public class MainActivity extends AppCompatActivity {
 
                 urlInput = textInput.getText().toString();
 
-                bkgdThread = new Thread(new Runnable(){
+                //creating progress bar dialog
+                progressBar = new ProgressDialog(v.getContext());
+                progressBar.setCancelable(true);
+                progressBar.setMessage("Fetching Images ...");
+                progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressBar.setProgress(0);
+                progressBar.setMax(100);
+                progressBar.show();
+
+                //rest progress bar and filesize status
+                progressBarStatus = 0;
+                imgCount = 0;
+
+                bkgdThread new Thread(new Runnable(){
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void run() {
-
                         myBitmaps = scrapeUrlsForBitmaps(urlInput);
 
                         runOnUiThread(new Runnable() {
@@ -91,11 +111,17 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
+                        if (progressBarStatus >= 100) {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            progressBar.dismiss();
+                        }
                     }
-
                 });
                 bkgdThread.start();
-
             }
         });
 
@@ -127,14 +153,12 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }).start();
-            }
-        });
 
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    protected List<Bitmap> scrapeUrlsForBitmaps(String urlInput){
+    protected List<Bitmap> scrapeUrlsForBitmaps(String urlInput) {
         org.jsoup.nodes.Document doc = null;
         try {
             doc = Jsoup.connect(urlInput).get();
@@ -144,8 +168,8 @@ public class MainActivity extends AppCompatActivity {
 
         Elements elements = doc.getElementsByTag("img");
         List<String> urls = elements.stream()
-                .map(x->x.absUrl("src"))
-                .filter(x-> x.substring(x.length()-4).equals(".jpg"))
+                .map(x -> x.absUrl("src"))
+                .filter(x -> x.substring(x.length() - 4).equals(".jpg"))
                 .limit(20)
                 .collect(Collectors.toList());
 
@@ -169,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         //don't forget to clear the list of tags
         androidx.gridlayout.widget.GridLayout myGrid = findViewById(R.id.grid_layout);
 
-        for (int i =0; i < myBitmaps.size(); i++){
+        for (int i = 0; i < myBitmaps.size(); i++) {
             ImageView imageview = new ImageView(this);
             //how to set the width and height dynamically?
             imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(300,300));
