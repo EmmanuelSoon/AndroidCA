@@ -57,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressBar;
     private int progressBarStatus = 0;
     private int fileCount = 0;
-    private Handler processBarHandler = new Handler();
+    private Handler progressBarHandler = new Handler();
+    private Runnable progressBarRunner;
     private Context context;
 
     private List<String> selectedBitmap = new ArrayList<>();
@@ -80,8 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         fetch = findViewById(R.id.btnFetch);
         fetch.setOnClickListener((view -> {
-            runFetch();
-            createProgressBarDialog(view);
+            runFetch(view);
         }));
 
         Button stop = findViewById(R.id.btnStop);
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         msg.show();
     }
 
-    private void runFetch(){
+    private void runFetch(View view){
         GridLayout myGrid = findViewById(R.id.grid_layout);
 
         if (!isUrl(textInput.getText().toString())) {
@@ -133,12 +133,14 @@ public class MainActivity extends AppCompatActivity {
                     myGrid.removeAllViews();
                     cleanUp();
                     setBkgdThread();
+                    createProgressBarDialog(view);
                 }
             }, 1000);
         }
         else{
             myGrid.removeAllViews();
             setBkgdThread();
+            createProgressBarDialog(view);
         }
     }
 
@@ -149,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                 if(Thread.interrupted()) return;
                 isDownloading =true;
                 myBitmaps = scrapeUrlsForBitmaps(textInput.getText().toString());
-                setProgressBarStatus(myBitmaps);
             }
         });
         bkgdThread.start();
@@ -181,13 +182,22 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
                 bitmaps.add(myBitmap);
                 fileCount++;
-                fetchProgressBar(fileCount);
+                updateProgressBar(fileCount);
                 setViews(myBitmap);
             }  catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return bitmaps;
+    }
+
+    private void updateProgressBar(int fileCount){
+        if(fileCount < 20){
+            progressBar.setProgress(fileCount);
+        }
+        else{
+            progressBar.dismiss();
+        }
     }
 
     //show image in gridlayout
@@ -261,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            processBarHandler.post(new Runnable() {
+            progressBarHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     progressBar.setProgress(progressBarStatus);
@@ -279,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            processBarHandler.post(new Runnable() {
+            progressBarHandler.post(progressBarRunner = new Runnable() {
                 @Override
                 public void run() {
                     progressBar.setProgress(progressBarStatus);
@@ -339,10 +349,14 @@ public class MainActivity extends AppCompatActivity {
 
     protected void cleanUp() {
 
-        if (myBitmaps != null)
-            myBitmaps.clear();
-        if (selectedBitmap != null)
-            selectedBitmap.clear();
+        if (myBitmaps != null) myBitmaps.clear();
+
+        if (selectedBitmap != null) selectedBitmap.clear();
+
+        if (progressBar != null) {
+            progressBar.cancel();
+            progressBar.setProgress(0);
+        }
 
     }
 
