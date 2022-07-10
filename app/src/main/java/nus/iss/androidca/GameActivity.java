@@ -19,7 +19,8 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
     TextView txtScore;
     int matchCounter;
     int startTime;
-
+    Handler handler = new Handler();
+    private boolean onStop = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,14 +51,17 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         handler.post(new Runnable() {
             @Override
             public void run() {
-                startTime = startTime + 1;
-                int seconds = startTime;
-                int minutes = seconds / 60;
-                int hours = minutes / 60;
-                seconds = seconds % 60;
-                minutes = minutes % 60;
-                txtTime.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
-                handler.postDelayed(this, 1000);
+                if (!onStop) {
+                    startTime = startTime + 1;
+                    int seconds = startTime;
+                    int minutes = seconds / 60;
+                    int hours = minutes / 60;
+                    seconds = seconds % 60;
+                    minutes = minutes % 60;
+                    txtTime.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+                    handler.postDelayed(this, 1000);
+                }
+
             }
         });
     }
@@ -69,6 +73,8 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
             Toast.makeText(this, "Match!", Toast.LENGTH_SHORT).show();
         }
         else if(content.equals("over")) {
+            onStop= true;
+            handler.removeCallbacksAndMessages(null);
             txtScore.setText("Game Over!");
             Toast.makeText(this, "You Win!", Toast.LENGTH_LONG).show();
             AlertDialog.Builder dlg = new AlertDialog.Builder(this)
@@ -81,6 +87,9 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
                             GameFragment fragment = (GameFragment) fm.findFragmentById(R.id.fragment_game);
                             fragment.reStartGame();
                             initGameAttribute();
+                            startTime = 0;
+                            onStop= false;
+                            runTimer();
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
