@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -57,14 +58,14 @@ public class MainActivity extends AppCompatActivity {
     private int progressBarStatus = 0;
     private int fileCount = 0;
     private Handler processBarHandler = new Handler();
+    private Context context;
 
-    private String urlInput;
     private List<String> selectedBitmap = new ArrayList<>();
-    private List<Bitmap> myBitmaps;
-    private List<Bitmap> bitmaps;
+    private List<Bitmap> myBitmaps = new ArrayList<>();
     private Thread bkgdThread;
     private androidx.gridlayout.widget.GridLayout myGrid;
     private int count;
+    private boolean isDownloading;
 
 
     @Override
@@ -72,107 +73,90 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        context = getBaseContext();
         textInput = findViewById(R.id.editText);
+        myGrid = findViewById(R.id.grid_layout);
+        isDownloading = false;
+
         fetch = findViewById(R.id.btnFetch);
+        fetch.setOnClickListener((view -> {
+            runFetch();
+            createProgressBarDialog(view);
+        }));
+
+        Button stop = findViewById(R.id.btnStop);
+        stop.setOnClickListener((view -> runStop()));
+
         start = findViewById(R.id.start_btn);
         start.setVisibility(View.GONE);
         start.setEnabled(false);
-        stop = findViewById(R.id.btnStop);
-        myGrid = findViewById(R.id.grid_layout);
 
-        fetch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (bkgdThread != null) {
-                    bkgdThread.interrupt();
-                    cleanUp();
-                }
-
-                String urlInput = textInput.getText().toString();
-
-                if (!isUrl(urlInput)) {
-                    Toast.makeText(MainActivity.this, "Wrong URL", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                createProgressBarDialog(v);
-
-                if (bkgdThread != null) {
-                    bkgdThread.interrupt();
-                    myGrid.removeAllViews();
-
-                    bkgdThread = null;
-                }
-
-                bkgdThread = new Thread(new Runnable() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    @Override
-                    public void run() {
-                        myBitmaps = scrapeUrlsForBitmaps(urlInput);
-                        if (Thread.interrupted()) {
-                            cleanUp();
-                            return;
-                        }
-
-                        setProgressBarStatus(myBitmaps);
-
-                    }
-                });
-                bkgdThread.start();
-            }
-        });
-        // after interrupt, bkgdThread is dead but don't know why it still downloading the photos
-        stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bkgdThread != null) {
-                    System.out.println("have back thread");
-                    bkgdThread.interrupt();
-                    Toast.makeText(MainActivity.this, "Cancelled Fetching", Toast.LENGTH_SHORT).show();
-                    if (bkgdThread.isAlive()) {
-                        System.out.println("alive");
-                        bkgdThread.interrupt();
-                    } else {
-                        System.out.println("dead");
-                    }
-                }
-            }
-        });
-        start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        boolean downloaded = downloadImage(myBitmaps, selectedBitmap);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast msg;
-                                if (downloaded) {
-                                    msg = Toast.makeText(MainActivity.this,
-                                            "Download Success", Toast.LENGTH_LONG);
-                                } else {
-                                    msg = Toast.makeText(MainActivity.this,
-                                            "Download Failed", Toast.LENGTH_LONG);
-                                }
-                                msg.show();
-                            }
-                        });
-                    }
-                }).start();
-            }
-        });
+        start.setOnClickListener((view -> runStart()));
     }
 
+    private void runStop(){
+        if(isDownloading){
+            bkgdThread.interrupt();
+            isDownloading = false;
+            cleanUp();
+        }
+    }
 
+    private void runStart(){
+        boolean downloaded = downloadImage(myBitmaps, selectedBitmap);
+        Toast msg;
+        if (downloaded) {
+            msg = Toast.makeText(MainActivity.this,
+                    "Download Success", Toast.LENGTH_LONG);
+        } else {
+            msg = Toast.makeText(MainActivity.this,
+                    "Download Failed", Toast.LENGTH_LONG);
+        }
+        msg.show();
+    }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void runFetch(){
+        GridLayout myGrid = findViewById(R.id.grid_layout);
+
+        if (!isUrl(textInput.getText().toString())) {
+            Toast.makeText(MainActivity.this, "Wrong URL", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(isDownloading){
+            bkgdThread.interrupt();
+            isDownloading = false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Restarting Download", Toast.LENGTH_SHORT).show();
+                    myGrid.removeAllViews();
+                    cleanUp();
+                    setBkgdThread();
+                }
+            }, 1000);
+        }
+        else{
+            myGrid.removeAllViews();
+            setBkgdThread();
+        }
+    }
+
+    private void setBkgdThread(){
+        bkgdThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(Thread.interrupted()) return;
+                isDownloading =true;
+                myBitmaps = scrapeUrlsForBitmaps(textInput.getText().toString());
+                setProgressBarStatus(myBitmaps);
+            }
+        });
+        bkgdThread.start();
+    }
+
     protected List<Bitmap> scrapeUrlsForBitmaps(String urlInput) {
         org.jsoup.nodes.Document doc = null;
-
         try {
             doc = Jsoup.connect(urlInput).get();
         } catch (IOException e) {
@@ -186,17 +170,11 @@ public class MainActivity extends AppCompatActivity {
                 .limit(20)
                 .collect(Collectors.toList());
 
-        bitmaps = new ArrayList<>();
+        ArrayList<Bitmap> bitmaps  = new ArrayList<>();
         int fileCount = 0;
-        count = 1;
         for (String imgURL : urls) {
-            if (bkgdThread.isInterrupted()) {
-                Toast.makeText(this, "Interrupted Fetch again", Toast.LENGTH_SHORT).show();
-                cleanUp();
-                myGrid.removeAllViews();
-                bkgdThread = null;
-            }
             try {
+                if(!isDownloading) break;
                 URL url = new URL(imgURL);
                 URLConnection conn = url.openConnection();
                 InputStream input = conn.getInputStream();
@@ -204,8 +182,8 @@ public class MainActivity extends AppCompatActivity {
                 bitmaps.add(myBitmap);
                 fileCount++;
                 fetchProgressBar(fileCount);
-                setView(myBitmap);
-            } catch (IOException e) {
+                setViews(myBitmap);
+            }  catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -213,44 +191,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //show image in gridlayout
-    protected void setView(Bitmap myBitmap){
+    protected void setViews(Bitmap myBitmap) {
+        androidx.gridlayout.widget.GridLayout myGrid = findViewById(R.id.grid_layout);
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 ImageView imageview = new ImageView(MainActivity.this);
-                imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(250,300));
+                imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(250, 300));
                 imageview.setImageBitmap(myBitmap);
                 imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 RelativeLayout.LayoutParams layoutPara = new RelativeLayout.LayoutParams(imageview.getLayoutParams());
                 layoutPara.setMargins(10, 5, 10, 5);
                 imageview.setLayoutParams(layoutPara);
-                imageview.setTag(count);
+                imageview.setTag(fileCount);
                 imageview.isShown();
                 myGrid.addView(imageview);
-                count++;
-                imageview.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        start.setVisibility(View.VISIBLE);
-                        if (selectedBitmap.contains(imageview.getTag().toString())){
-                            imageview.clearColorFilter();
-                            selectedBitmap.remove(imageview.getTag().toString());
-                            if( selectedBitmap.size() < 6){
-                                start.setEnabled(false);
-                            }
-                        }
-                        //do a check for selected size, cannot select unless there is less than 6 items. to change when difficulty level is implemented
-                        else if (selectedBitmap.size() < 6){
-                            selectedBitmap.add(imageview.getTag().toString());
-                            imageview.setColorFilter(Color.argb(175,255, 255, 255));
-                            if( selectedBitmap.size() == 6){
-                                start.setEnabled(true);
-                            }
-                        }
-                    }
+
+                imageview.setOnClickListener((view) -> {
+                    imageListener(imageview);
                 });
             }
         });
+    }
+
+    private void imageListener(ImageView imageview) {
+        Button start = findViewById(R.id.start_btn);
+
+        start.setVisibility(View.VISIBLE);
+        if (selectedBitmap.contains(imageview.getTag().toString())){
+            imageview.clearColorFilter();
+            selectedBitmap.remove(imageview.getTag().toString());
+            if( selectedBitmap.size() < 6){
+                start.setEnabled(false);
+            }
+        }
+        //do a check for selected size, cannot select unless there is less than 6 items. to change when difficulty level is implemented
+        else if (selectedBitmap.size() < 6) {
+            selectedBitmap.add(imageview.getTag().toString());
+            imageview.setColorFilter(Color.argb(175, 255, 255, 255));
+            if (selectedBitmap.size() == 6) {
+                start.setEnabled(true);
+            }
+        }
     }
 
     //progress bar functions
@@ -365,3 +348,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
+
+
+
+
