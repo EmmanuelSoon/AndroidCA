@@ -199,7 +199,6 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-
     private void onFlip(EasyFlipView easyFlipView){
         for (int i = 0; i < cards.size(); i++){
             EasyFlipView currCard = cards.get(i);
