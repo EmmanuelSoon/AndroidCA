@@ -1,8 +1,10 @@
 package nus.iss.androidca;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -69,7 +71,32 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         else if(content.equals("over")) {
             txtScore.setText("Game Over!");
             Toast.makeText(this, "You Win!", Toast.LENGTH_LONG).show();
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this)
+                    .setTitle("Congratulations! You Win!")
+                    .setMessage("Do you want to play again?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            FragmentManager fm = getSupportFragmentManager();
+                            GameFragment fragment = (GameFragment) fm.findFragmentById(R.id.fragment_game);
+                            fragment.reStartGame();
+                            initGameAttribute();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // response to main activity
+                            finish();
+                        }
+                    })
+                    .setIcon(R.drawable.card1);
+            dlg.show();
         }
     }
 
+    private void initGameAttribute() {
+        int matchCounter = 0;
+        txtScore.setText(matchCounter + " of 6 matches");
+    }
 }
