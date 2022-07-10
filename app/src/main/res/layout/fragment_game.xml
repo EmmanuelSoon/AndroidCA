@@ -9,131 +9,393 @@
     android:layout_marginTop="20dp"
     android:layout_marginBottom="20dp"
     android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_weight="1"
+        android:padding="1dp"
+        android:orientation="horizontal">
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard0"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
             android:layout_weight="1"
-            android:padding="1dp"
-            android:orientation="horizontal">
-            <ImageButton
-                android:id="@+id/card0"
-                android:layout_width="0dp"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:background="@color/white"
-                android:scaleType="centerInside"
                 android:src="@drawable/cardback" />
 
-            <ImageButton
-                android:id="@+id/card1"
-                android:layout_width="0dp"
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/cardback"
                 android:background="@color/white"
-                android:scaleType="centerInside"
-                android:layout_weight="1"/>
-            <ImageButton
-                android:id="@+id/card2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/cardback"
-                android:background="@color/white"
-                android:scaleType="centerInside"
-                android:layout_weight="1"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
+                android:src="@drawable/cardback" />
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
             android:layout_weight="1"
-            android:orientation="horizontal">
-            <ImageButton
-                android:id="@+id/card3"
-                android:layout_width="0dp"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/cardback"
                 android:background="@color/white"
-                android:scaleType="centerInside"
-                android:layout_weight="1"/>
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
 
-            <ImageButton
-                android:id="@+id/card4"
-                android:layout_width="0dp"
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/cardback"
                 android:background="@color/white"
-                android:scaleType="centerInside"
-                android:layout_weight="1"/>
-            <ImageButton
-                android:id="@+id/card5"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
                 android:src="@drawable/cardback"
-                android:background="@color/white"
-                android:scaleType="centerInside"
-                android:layout_weight="1"/>
-        </LinearLayout>
+                tools:ignore="DuplicateIds" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
             android:layout_weight="1"
-            android:orientation="horizontal">
-            <ImageButton
-                android:id="@+id/card6"
-                android:layout_width="0dp"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/cardback"
                 android:background="@color/white"
-                android:scaleType="centerInside"
-                android:layout_weight="1"/>
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
 
-            <ImageButton
-                android:id="@+id/card7"
-                android:layout_width="0dp"
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/cardback"
                 android:background="@color/white"
-                android:scaleType="centerInside"
-                android:layout_weight="1"/>
-            <ImageButton
-                android:id="@+id/card8"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
                 android:src="@drawable/cardback"
-                android:background="@color/white"
-                android:scaleType="centerInside"
-                android:layout_weight="1"/>
-        </LinearLayout>
+                tools:ignore="DuplicateIds" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-            <ImageButton
-                android:id="@+id/card9"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/cardback"
-                android:background="@color/white"
-                android:scaleType="centerInside"
-                android:layout_weight="1"/>
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
 
-            <ImageButton
-                android:id="@+id/card10"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/cardback"
-                android:background="@color/white"
-                android:scaleType="centerInside"
-                android:layout_weight="1"/>
-            <ImageButton
-                android:id="@+id/card11"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/cardback"
-                android:background="@color/white"
-                android:scaleType="centerInside"
-                android:layout_weight="1"/>
-        </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard6"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard7"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard8"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard9"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard10"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flipCard11"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:flipOnTouch="true"
+            app:flipEnabled="true"
+            app:flipDuration="200"
+            app:flipFrom="right"
+            app:flipType="horizontal"
+            app:autoFlipBack="false"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/cardback"
+                tools:ignore="DuplicateIds" />
+
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+    </LinearLayout>
+</LinearLayout>

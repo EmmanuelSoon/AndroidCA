@@ -3,17 +3,22 @@ package nus.iss.androidca;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.annotation.UiThread;
 import androidx.fragment.app.Fragment;
 
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.wajahatkarim3.easyflipview.EasyFlipView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,8 +32,8 @@ public class GameFragment extends Fragment implements View.OnClickListener {
     private int matchedPairs = 0;
     private int firstClicked = -1;
     private List<Integer> board = new ArrayList<>();
-    private List<ImageButton> btns = new ArrayList<>();
-    private List<ImageButton> matchedPairtodisable = new ArrayList<>();
+    private List<EasyFlipView> matchedPairtodisable = new ArrayList<>();
+    private List<EasyFlipView> cards = new ArrayList<>();
 
     private boolean isGameOver() {
         return size == matchedPairs;
@@ -59,8 +64,8 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         super.onStart();
         View view = getView();
         if (view != null) {
-            initBtn(view);
             initBoard();
+            initBtn(view);
         }
     }
 
@@ -72,78 +77,11 @@ public class GameFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        int id = view.getId();
-        for (int i = 0; i < btns.size(); i++) {
-            ImageButton btn = btns.get(i);
-            if (btn.getId() == id) {
-                // i is the index of the button that we set start from 0
-                handleClick(i);
-                break;
-            }
-        }
-    }
-    private void handleClick(int btnIndex){
-        if (firstClicked < 0) {
-            // if it is first click
-            firstClicked = btnIndex;
-            ImageButton btn = btns.get(btnIndex);
-            btn.setImageBitmap(Bitmaps[board.get(btnIndex)]);
-            //Temporarily disable the button that we just clicked
-            btn.setEnabled(false);
-        }
-        else {
-            //check whether they are matching
-            if (board.get(firstClicked).equals(board.get(btnIndex))) {
-                ImageButton btn = btns.get(btnIndex);
 
-                //Add the matched pairs to the list to keep it disabled.
-                matchedPairtodisable.add(btns.get(firstClicked));
-                matchedPairtodisable.add(btn);
-                btn.setImageBitmap(Bitmaps[board.get(btnIndex)]);
-                enableorDisableBtns("Disable");
-                btn.setEnabled(false);
-
-                matchedPairs++;
-                iGameFragment.itemClicked("match");
-                if (isGameOver()) {
-                    //send congrats Msg
-                    iGameFragment.itemClicked("over");
-                }
-                //Enable the button selectively.
-                enableorDisableBtns("Enable");
-                clearFirstClick();
-
-            }
-            else {
-                //if 2 images are not matching
-                ImageButton btn = btns.get(btnIndex);
-                btn.setImageBitmap(Bitmaps[board.get(btnIndex)]);
-                enableorDisableBtns("Disable");
-                btn.setEnabled(false);
-
-
-                new CountDownTimer(1000, 1000) {
-                    @Override
-                    public void onTick(long l) {
-                        //Do nothing
-                    }
-                    @Override
-                    public void onFinish() {
-                        reverseBackImage(firstClicked);
-                        reverseBackImage(btnIndex);
-                        enableorDisableBtns("Enable");
-                        clearFirstClick();
-                    }
-                }.start();
-            }
-        }
     }
 
-    private void reverseBackImage(int index) {
-        ImageButton btn = btns.get(index);
-        btn.setImageBitmap(defaultBitmap);
-        btn.setEnabled(true);
-    }
+
+
 
     public interface IGameFragment{
         void itemClicked(String content);
@@ -155,84 +93,153 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         iGameFragment = (IGameFragment) context;
     }
 
-    private void initBtn(View v) {
-        ImageButton imageButton0 = v.findViewById(R.id.card0);
-        if (imageButton0 != null) {
-            imageButton0.setOnClickListener(this);
-            btns.add(imageButton0);
+
+    private void handleFlip(int cardIndex){
+        EasyFlipView card = cards.get(cardIndex);
+        MediaPlayer cardflip = MediaPlayer.create(this.getContext(), R.raw.card_flip);
+        cardflip.start();
+
+        if (firstClicked < 0){
+            firstClicked = cardIndex;
+            card.setFlipEnabled(false);
         }
-        ImageButton imageButton1 = v.findViewById(R.id.card1);
-        if (imageButton1 != null) {
-            imageButton1.setOnClickListener(this);
-            btns.add(imageButton1);
-        }
-        ImageButton imageButton2 = v.findViewById(R.id.card2);
-        if (imageButton2 != null) {
-            imageButton2.setOnClickListener(this);
-            btns.add(imageButton2);
-        }
-        ImageButton imageButton3 = v.findViewById(R.id.card3);
-        if (imageButton3 != null) {
-            imageButton3.setOnClickListener(this);
-            btns.add(imageButton3);
-        }
-        ImageButton imageButton4 = v.findViewById(R.id.card4);
-        if (imageButton4 != null) {
-            imageButton4.setOnClickListener(this);
-            btns.add(imageButton4);
-        }
-        ImageButton imageButton5 = v.findViewById(R.id.card5);
-        if (imageButton5 != null) {
-            imageButton5.setOnClickListener(this);
-            btns.add(imageButton5);
-        }
-        ImageButton imageButton6 = v.findViewById(R.id.card6);
-        if (imageButton6 != null) {
-            imageButton6.setOnClickListener(this);
-            btns.add(imageButton6);
-        }
-        ImageButton imageButton7 = v.findViewById(R.id.card7);
-        if (imageButton7 != null) {
-            imageButton7.setOnClickListener(this);
-            btns.add(imageButton7);
-        }
-        ImageButton imageButton8 = v.findViewById(R.id.card8);
-        if (imageButton8 != null) {
-            imageButton8.setOnClickListener(this);
-            btns.add(imageButton8);
-        }
-        ImageButton imageButton9 = v.findViewById(R.id.card9);
-        if (imageButton9 != null) {
-            imageButton9.setOnClickListener(this);
-            btns.add(imageButton9);
-        }
-        ImageButton imageButton10 = v.findViewById(R.id.card10);
-        if (imageButton10 != null) {
-            imageButton10.setOnClickListener(this);
-            btns.add(imageButton10);
-        }
-        ImageButton imageButton11 = v.findViewById(R.id.card11);
-        if (imageButton11 != null) {
-            imageButton11.setOnClickListener(this);
-            btns.add(imageButton11);
+        else {
+            //Matched
+            if(board.get(firstClicked).equals(board.get(cardIndex))){
+
+                MediaPlayer correct = MediaPlayer.create(this.getContext(), R.raw.correct);
+                correct.start();
+                card.setFlipEnabled(false);
+                matchedPairtodisable.add(cards.get(firstClicked));
+                matchedPairtodisable.add(card);
+                enableOrDisableCards("Disable");
+
+                matchedPairs++;
+                iGameFragment.itemClicked("match");
+                if (isGameOver()) {
+                    //send congrats Msg
+                    iGameFragment.itemClicked("over");
+                }
+                //Enable the button selectively.
+                enableOrDisableCards("Enable");
+                clearFirstClick();
+            }
+            else {
+                //MisMatched
+                enableOrDisableCards("Disable");
+                MediaPlayer wrong = MediaPlayer.create(this.getContext(), R.raw.wrong);
+                wrong.start();
+
+                new CountDownTimer(1000, 1000) {
+                    @Override
+                    public void onTick(long l) {
+                        //Do nothing
+                    }
+                    @Override
+                    public void onFinish() {
+                        EasyFlipView otherCard = cards.get(firstClicked);
+
+                        card.setFlipEnabled(true);
+                        otherCard.setFlipEnabled(true);
+                        flipCardsBack(card, otherCard);
+                        clearFirstClick();
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                card.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+                                otherCard.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+                            }
+                        }, 500);
+                        enableOrDisableCards("Enable");
+                    }
+                }.start();
+            }
         }
     }
 
-    private void enableorDisableBtns(String flag)
-    {
+    private void flipCardsBack(EasyFlipView card, EasyFlipView otherCard){
+        card.setOnFlipListener(null);
+        otherCard.setOnFlipListener(null);
+        otherCard.flipTheView();
+        card.flipTheView();
+    }
+
+    private  void enableOrDisableCards(String flag){
         if(flag.equals("Disable")) {
-            for (ImageButton button : btns) {
-                button.setEnabled(false);
+            for (EasyFlipView card : cards) {
+                card.setFlipEnabled(false);
             }
         }
 
         if(flag.equals("Enable")) {
-            for (ImageButton button : btns) {
-                if(!matchedPairtodisable.contains(button))
-                button.setEnabled(true);
+            for (EasyFlipView card : cards) {
+                if(!matchedPairtodisable.contains(card))
+                    card.setFlipEnabled(true);
             }
         }
     }
+
+
+    private void onFlip(EasyFlipView easyFlipView){
+        for (int i = 0; i < cards.size(); i++){
+            EasyFlipView currCard = cards.get(i);
+            if(currCard.getId() == easyFlipView.getId()){
+                handleFlip(i);
+                break;
+            }
+        }
+    }
+
+    private void initBtn(View view) {
+        EasyFlipView card1 = view.findViewById(R.id.flipCard0);
+        EasyFlipView card2 = view.findViewById(R.id.flipCard1);
+        EasyFlipView card3 = view.findViewById(R.id.flipCard2);
+        EasyFlipView card4 = view.findViewById(R.id.flipCard3);
+        EasyFlipView card5 = view.findViewById(R.id.flipCard4);
+        EasyFlipView card6 = view.findViewById(R.id.flipCard5);
+        EasyFlipView card7 = view.findViewById(R.id.flipCard6);
+        EasyFlipView card8 = view.findViewById(R.id.flipCard7);
+        EasyFlipView card9 = view.findViewById(R.id.flipCard8);
+        EasyFlipView card10 = view.findViewById(R.id.flipCard9);
+        EasyFlipView card11 = view.findViewById(R.id.flipCard10);
+        EasyFlipView card12 = view.findViewById(R.id.flipCard11);
+
+        card1.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+        card2.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+        card3.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+        card4.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+        card5.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+        card6.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+        card7.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+        card8.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+        card9.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+        card10.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+        card11.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+        card12.setOnFlipListener((easyFlipView, newCurrentSide) -> onFlip(easyFlipView));
+
+        cards.add(card1);
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(card5);
+        cards.add(card6);
+        cards.add(card7);
+        cards.add(card8);
+        cards.add(card9);
+        cards.add(card10);
+        cards.add(card11);
+        cards.add(card12);
+
+        for (int i = 0; i < cards.size(); i++){
+            ImageView front = cards.get(i).findViewById(R.id.front);
+            front.setImageBitmap(Bitmaps[board.get(i)]);
+        }
+
+    }
+
+
+
     public void clearFirstClick() {
         this.firstClicked = -1;
     }
@@ -242,9 +249,25 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         firstClicked = -1;
         Collections.shuffle(board);
         matchedPairtodisable.clear();
-        enableorDisableBtns("Enable");
-        for (ImageButton btn : btns) {
-            btn.setImageBitmap(defaultBitmap);
+        enableOrDisableCards("Enable");
+        flipAllCardsBack();
+    }
+
+    private void flipAllCardsBack(){
+        for (EasyFlipView card: cards){
+            card.setOnFlipListener(null);
         }
+
+        for (EasyFlipView card: cards){
+            card.flipTheView();
+        }
+        cards.clear();
+        View view = getView();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initBtn(view);
+            }
+        }, 500);
     }
 }
