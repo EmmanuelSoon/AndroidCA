@@ -84,43 +84,33 @@ public class MainActivity extends AppCompatActivity {
         fetch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bkgdThread != null){
+                if (bkgdThread != null) {
                     bkgdThread.interrupt();
                     cleanUp();
 
                 }
                 String urlInput = textInput.getText().toString();
 
-                if(!isUrl(urlInput)){
+                if (!isUrl(urlInput)) {
                     Toast.makeText(MainActivity.this, "Wrong URL", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                //creating progress bar dialog
-                progressBar = new ProgressDialog(v.getContext());
-                progressBar.setCancelable(true);
-                progressBar.setMessage("Fetching Images ...");
-                progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressBar.setProgress(0);
-                progressBar.setMax(20);
-                progressBar.show();
+                createProgressBarDialog(v);
 
-                //reset progress bar and filesize status
-                progressBarStatus = 0;
-                fileCount = 0;
-                if(bkgdThread!=null){
+                if (bkgdThread != null) {
                     bkgdThread.interrupt();
                     myGrid.removeAllViews();
 
                     bkgdThread = null;
                 }
 
-                bkgdThread = new Thread(new Runnable(){
+                bkgdThread = new Thread(new Runnable() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void run() {
                         myBitmaps = scrapeUrlsForBitmaps(urlInput);
-                        if(Thread.interrupted()){
+                        if (Thread.interrupted()) {
                             cleanUp();
                             return;
                         }
@@ -148,15 +138,14 @@ public class MainActivity extends AppCompatActivity {
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(bkgdThread != null){
+                if (bkgdThread != null) {
                     System.out.println("have back thread");
                     bkgdThread.interrupt();
-                    Toast.makeText(MainActivity.this,"Cancelled Fetching",Toast.LENGTH_SHORT).show();
-                    if(bkgdThread.isAlive()){
+                    Toast.makeText(MainActivity.this, "Cancelled Fetching", Toast.LENGTH_SHORT).show();
+                    if (bkgdThread.isAlive()) {
                         System.out.println("alive");
                         bkgdThread.interrupt();
-                    }
-                    else{
+                    } else {
                         System.out.println("dead");
                     }
                 }
@@ -194,6 +183,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void createProgressBarDialog(View view) {
+        //creating progress bar dialog
+        progressBar = new ProgressDialog(view.getContext());
+        progressBar.setCancelable(true);
+        progressBar.setMessage("Fetching Images ...");
+        progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressBar.setProgress(0);
+        progressBar.setMax(20);
+        progressBar.show();
+
+        //reset progress bar and filesize status
+        progressBarStatus = 0;
+        fileCount = 0;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     protected List<Bitmap> scrapeUrlsForBitmaps(String urlInput) {
         org.jsoup.nodes.Document doc = null;
@@ -213,13 +217,13 @@ public class MainActivity extends AppCompatActivity {
 
         bitmaps = new ArrayList<>();
         int fileCount = 0;
-        count =1;
+        count = 1;
         for (String imgURL : urls) {
-            if(bkgdThread.isInterrupted()){
+            if (bkgdThread.isInterrupted()) {
                 Toast.makeText(this, "Interrupted Fetch again", Toast.LENGTH_SHORT).show();
                 cleanUp();
                 myGrid.removeAllViews();
-                bkgdThread=null;
+                bkgdThread = null;
             }
             try {
                 URL url = new URL(imgURL);
@@ -235,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         ImageView imageview = new ImageView(MainActivity.this);
-                        imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(300,300));
+                        imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(300, 300));
                         imageview.setImageBitmap(myBitmap);
                         imageview.setTag(count);
                         imageview.isShown();
@@ -245,18 +249,18 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 start.setVisibility(View.VISIBLE);
-                                if (selectedBitmap.contains(imageview.getTag().toString())){
+                                if (selectedBitmap.contains(imageview.getTag().toString())) {
                                     imageview.clearColorFilter();
                                     selectedBitmap.remove(imageview.getTag().toString());
-                                    if( selectedBitmap.size() < 6){
+                                    if (selectedBitmap.size() < 6) {
                                         start.setEnabled(false);
                                     }
                                 }
                                 //do a check for selected size, cannot select unless there is less than 6 items. to change when difficulty level is implemented
-                                else if (selectedBitmap.size() < 6){
+                                else if (selectedBitmap.size() < 6) {
                                     selectedBitmap.add(imageview.getTag().toString());
-                                    imageview.setColorFilter(Color.argb(175,255, 255, 255));
-                                    if( selectedBitmap.size() == 6){
+                                    imageview.setColorFilter(Color.argb(175, 255, 255, 255));
+                                    if (selectedBitmap.size() == 6) {
                                         start.setEnabled(true);
                                     }
                                 }
@@ -273,12 +277,12 @@ public class MainActivity extends AppCompatActivity {
         return bitmaps;
     }
 
-    public void fetchProgressBar(int fileCount){
+    public void fetchProgressBar(int fileCount) {
         if (progressBarStatus < 20) {
 
             progressBarStatus = fileCount;
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -291,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (progressBarStatus >= 20) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -300,18 +304,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected boolean isUrl(String url){
-        try{
+    protected boolean isUrl(String url) {
+        try {
             if (!url.isEmpty() && url.contains("https")) {
                 return true;
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return false;
     }
-
 
 
     protected boolean downloadImage(List<Bitmap> myBitmaps, List<String> selectedBitmap) {
@@ -334,8 +336,7 @@ public class MainActivity extends AppCompatActivity {
                 fos.close();
 
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -344,18 +345,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void cleanUp(){
-        if(bitmaps!=null){
+    protected void cleanUp() {
+        if (bitmaps != null) {
             bitmaps.clear();
         }
-        if(myBitmaps!=null)
+        if (myBitmaps != null)
             myBitmaps.clear();
-        if(selectedBitmap!=null)
+        if (selectedBitmap != null)
             selectedBitmap.clear();
 
     }
-
-
 
 
 }
