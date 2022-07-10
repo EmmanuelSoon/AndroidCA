@@ -233,8 +233,18 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
-
     public void clearFirstClick() {
         this.firstClicked = -1;
+    }
+
+    public void reStartGame() {
+        matchedPairs = 0;
+        firstClicked = -1;
+        Collections.shuffle(board);
+        matchedPairtodisable.clear();
+        enableorDisableBtns("Enable");
+        for (ImageButton btn : btns) {
+            btn.setImageBitmap(defaultBitmap);
+        }
     }
 }
