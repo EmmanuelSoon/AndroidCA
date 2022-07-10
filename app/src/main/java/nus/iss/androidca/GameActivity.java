@@ -105,7 +105,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
     }
 
     private void initGameAttribute() {
-        int matchCounter = 0;
+        matchCounter = 0;
         txtScore.setText(matchCounter + " of 6 matches");
     }
 }
