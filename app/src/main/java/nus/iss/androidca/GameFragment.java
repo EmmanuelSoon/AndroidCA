@@ -28,6 +28,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
     private int firstClicked = -1;
     private List<Integer> board = new ArrayList<>();
     private List<ImageButton> btns = new ArrayList<>();
+    private List<ImageButton> matchedPairtodisable = new ArrayList<>();
 
     private boolean isGameOver() {
         return size == matchedPairs;
@@ -94,21 +95,32 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             //check whether they are matching
             if (board.get(firstClicked).equals(board.get(btnIndex))) {
                 ImageButton btn = btns.get(btnIndex);
+
+                //Add the matched pairs to the list to keep it disabled.
+                matchedPairtodisable.add(btns.get(firstClicked));
+                matchedPairtodisable.add(btn);
                 btn.setImageBitmap(Bitmaps[board.get(btnIndex)]);
+                enableorDisableBtns("Disable");
                 btn.setEnabled(false);
+
                 matchedPairs++;
                 iGameFragment.itemClicked("match");
                 if (isGameOver()) {
                     //send congrats Msg
                     iGameFragment.itemClicked("over");
                 }
+                //Enable the button selectively.
+                enableorDisableBtns("Enable");
                 clearFirstClick();
+
             }
             else {
                 //if 2 images are not matching
                 ImageButton btn = btns.get(btnIndex);
                 btn.setImageBitmap(Bitmaps[board.get(btnIndex)]);
+                enableorDisableBtns("Disable");
                 btn.setEnabled(false);
+
 
                 new CountDownTimer(1000, 1000) {
                     @Override
@@ -119,6 +131,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
                     public void onFinish() {
                         reverseBackImage(firstClicked);
                         reverseBackImage(btnIndex);
+                        enableorDisableBtns("Enable");
                         clearFirstClick();
                     }
                 }.start();
@@ -202,6 +215,22 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         if (imageButton11 != null) {
             imageButton11.setOnClickListener(this);
             btns.add(imageButton11);
+        }
+    }
+
+    private void enableorDisableBtns(String flag)
+    {
+        if(flag.equals("Disable")) {
+            for (ImageButton button : btns) {
+                button.setEnabled(false);
+            }
+        }
+
+        if(flag.equals("Enable")) {
+            for (ImageButton button : btns) {
+                if(!matchedPairtodisable.contains(button))
+                button.setEnabled(true);
+            }
         }
     }
 
