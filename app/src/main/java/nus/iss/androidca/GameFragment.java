@@ -3,7 +3,9 @@ package nus.iss.androidca;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 
 import androidx.annotation.UiThread;
@@ -35,6 +37,9 @@ public class GameFragment extends Fragment implements View.OnClickListener {
     private List<EasyFlipView> matchedPairtodisable = new ArrayList<>();
     private List<EasyFlipView> cards = new ArrayList<>();
 
+    private SoundPool sp;
+    private int[] soundIds;
+
     private boolean isGameOver() {
         return size == matchedPairs;
     }
@@ -62,6 +67,21 @@ public class GameFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
+
+        AudioAttributes attrs = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        sp = new SoundPool.Builder()
+                .setMaxStreams(10)
+                .setAudioAttributes(attrs)
+                .build();
+
+        soundIds = new int[10];
+        soundIds[0] = sp.load(this.getContext(), R.raw.card_flip, 2);
+        soundIds[1] = sp.load(this.getContext(), R.raw.correct, 1);
+        soundIds[2] = sp.load(this.getContext(), R.raw.wrong, 1);
+
         View view = getView();
         if (view != null) {
             initBoard();
@@ -96,8 +116,8 @@ public class GameFragment extends Fragment implements View.OnClickListener {
 
     private void handleFlip(int cardIndex){
         EasyFlipView card = cards.get(cardIndex);
-        MediaPlayer cardflip = MediaPlayer.create(this.getContext(), R.raw.card_flip);
-        cardflip.start();
+        sp.play(soundIds[0], 1, 1, 2, 0, 1.0F);
+
 
         if (firstClicked < 0){
             firstClicked = cardIndex;
@@ -106,9 +126,9 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         else {
             //Matched
             if(board.get(firstClicked).equals(board.get(cardIndex))){
+                sp.play(soundIds[1], 1, 1, 1, 0, 1.0F);
 
-                MediaPlayer correct = MediaPlayer.create(this.getContext(), R.raw.correct);
-                correct.start();
+
                 card.setFlipEnabled(false);
                 matchedPairtodisable.add(cards.get(firstClicked));
                 matchedPairtodisable.add(card);
@@ -127,8 +147,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             else {
                 //MisMatched
                 enableOrDisableCards("Disable");
-                MediaPlayer wrong = MediaPlayer.create(this.getContext(), R.raw.wrong);
-                wrong.start();
+                sp.play(soundIds[2], 1, 1, 1, 0, 1.0F);
 
                 new CountDownTimer(1000, 1000) {
                     @Override
