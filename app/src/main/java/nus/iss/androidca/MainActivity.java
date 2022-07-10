@@ -233,48 +233,49 @@ public class MainActivity extends AppCompatActivity {
                 bitmaps.add(myBitmap);
                 fileCount++;
                 fetchProgressBar(fileCount);
-
-                //show image in gridlayout
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ImageView imageview = new ImageView(MainActivity.this);
-                        imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(300, 300));
-                        imageview.setImageBitmap(myBitmap);
-                        imageview.setTag(count);
-                        imageview.isShown();
-                        myGrid.addView(imageview);
-                        count++;
-                        imageview.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                start.setVisibility(View.VISIBLE);
-                                if (selectedBitmap.contains(imageview.getTag().toString())) {
-                                    imageview.clearColorFilter();
-                                    selectedBitmap.remove(imageview.getTag().toString());
-                                    if (selectedBitmap.size() < 6) {
-                                        start.setEnabled(false);
-                                    }
-                                }
-                                //do a check for selected size, cannot select unless there is less than 6 items. to change when difficulty level is implemented
-                                else if (selectedBitmap.size() < 6) {
-                                    selectedBitmap.add(imageview.getTag().toString());
-                                    imageview.setColorFilter(Color.argb(175, 255, 255, 255));
-                                    if (selectedBitmap.size() == 6) {
-                                        start.setEnabled(true);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                });
-
-
+                setView(myBitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return bitmaps;
+    }
+
+    //show image in gridlayout
+    protected void setView(Bitmap myBitmap){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ImageView imageview = new ImageView(MainActivity.this);
+                imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(300,300));
+                imageview.setImageBitmap(myBitmap);
+                imageview.setTag(count);
+                imageview.isShown();
+                myGrid.addView(imageview);
+                count++;
+                imageview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        start.setVisibility(View.VISIBLE);
+                        if (selectedBitmap.contains(imageview.getTag().toString())){
+                            imageview.clearColorFilter();
+                            selectedBitmap.remove(imageview.getTag().toString());
+                            if( selectedBitmap.size() < 6){
+                                start.setEnabled(false);
+                            }
+                        }
+                        //do a check for selected size, cannot select unless there is less than 6 items. to change when difficulty level is implemented
+                        else if (selectedBitmap.size() < 6){
+                            selectedBitmap.add(imageview.getTag().toString());
+                            imageview.setColorFilter(Color.argb(175,255, 255, 255));
+                            if( selectedBitmap.size() == 6){
+                                start.setEnabled(true);
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public void fetchProgressBar(int fileCount) {
