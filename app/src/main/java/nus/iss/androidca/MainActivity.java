@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.GridLayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import androidx.gridlayout.widget.GridLayout;
 
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toast;
@@ -216,8 +218,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 ImageView imageview = new ImageView(MainActivity.this);
-                imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(300,300));
+                imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(250,300));
                 imageview.setImageBitmap(myBitmap);
+                imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                RelativeLayout.LayoutParams layoutPara = new RelativeLayout.LayoutParams(imageview.getLayoutParams());
+                layoutPara.setMargins(10, 5, 10, 5);
+                imageview.setLayoutParams(layoutPara);
                 imageview.setTag(count);
                 imageview.isShown();
                 myGrid.addView(imageview);

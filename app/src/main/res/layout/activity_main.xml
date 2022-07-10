@@ -10,6 +10,7 @@
         android:id="@+id/editText"
         android:layout_width="0dp"
         android:hint="@string/urlPrompt"
+        android:text="@string/defaultUrl"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/grid_layout"
         app:layout_constraintLeft_toLeftOf="parent"
