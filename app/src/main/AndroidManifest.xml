@@ -33,7 +33,8 @@
         </activity>
         <activity
             android:name=".GameActivity"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

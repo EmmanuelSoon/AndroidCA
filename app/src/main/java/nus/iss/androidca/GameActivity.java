@@ -77,6 +77,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
             handler.removeCallbacksAndMessages(null);
             txtScore.setText("Game Over!");
             Toast.makeText(this, "You Win!", Toast.LENGTH_LONG).show();
+
             AlertDialog.Builder dlg = new AlertDialog.Builder(this)
                     .setTitle("Congratulations! You Win!")
                     .setMessage("Do you want to play again?")
