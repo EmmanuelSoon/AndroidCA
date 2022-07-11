@@ -62,11 +62,12 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         bitmaps[3] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card4);
         bitmaps[4] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card5);
         bitmaps[5] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card6);
+        */
         Bitmap defaultBitmaps = BitmapFactory.decodeResource(this.getResources(), R.drawable.cardback1);
         FragmentManager fm = getSupportFragmentManager();
         GameFragment fragment = (GameFragment) fm.findFragmentById(R.id.fragment_game);
         fragment.setBitmaps(bitmaps, defaultBitmaps);
-        */
+
         restartMusic();
     }
 

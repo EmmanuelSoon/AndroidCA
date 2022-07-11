@@ -34,7 +34,7 @@
                 android:id="@+id/front"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/black"
                 android:src="@drawable/cardback" />
 
             <ImageView
@@ -63,7 +63,7 @@
                 android:id="@+id/front"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/black"
                 android:src="@drawable/cardback"
                 tools:ignore="DuplicateIds" />
 
@@ -93,7 +93,7 @@
                 android:id="@+id/front"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/black"
                 android:src="@drawable/cardback"
                 tools:ignore="DuplicateIds" />
 
@@ -131,7 +131,7 @@
                 android:id="@+id/front"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/black"
                 android:src="@drawable/cardback"
                 tools:ignore="DuplicateIds" />
 
