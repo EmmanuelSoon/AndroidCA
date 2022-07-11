@@ -3,5 +3,5 @@
     <font
         android:fontStyle="normal"
         android:fontWeight="400"
-        android:font="@font/welcomeFont" />
+        android:font="@font/welcome_font" />
 </font-family>

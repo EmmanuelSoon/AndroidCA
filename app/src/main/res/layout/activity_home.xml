@@ -1,37 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/yellow">
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/welcomeText"
-        android:textSize="40sp"
-        android:fontFamily="@font/welcomeFont"
-        android:textColor="#E91E63"
-        android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:gravity="center"/>
+        android:fontFamily="@font/welcome_font"
+        android:gravity="center"
+        android:text="@string/welcomeText"
+        android:textColor="#E91E63"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@+id/gifImageView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <pl.droidsonroids.gif.GifImageView
-        android:layout_width="380dp"
-        android:layout_height="378dp"
-        android:layout_gravity="center"
-        android:src="@drawable/piggy" />
+        android:id="@+id/gifImageView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/piggy"
+        app:layout_constraintBottom_toTopOf="@+id/viewRankingBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
     <Button
-        style="@style/btnStyle"
         android:id="@+id/viewRankingBtn"
-        android:layout_height="wrap_content"
-        android:text="@string/viewRankings" />
-    <Button
         style="@style/btnStyle"
-        android:id="@+id/enterBtn"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/enterGame"/>
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="41dp"
+        android:text="@string/viewRankings"
+        app:layout_constraintBottom_toTopOf="@+id/enterBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gifImageView2" />
+
+    <Button
+        android:id="@+id/enterBtn"
+        style="@style/btnStyle"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="76dp"
+        android:text="@string/enterGame"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewRankingBtn" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
