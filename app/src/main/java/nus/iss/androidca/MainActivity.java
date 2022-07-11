@@ -89,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
         rlGameActivity = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
-                        System.out.println("delete filessss");
+                        deleteStoredFiles();
+                        System.out.println("files deleted");
                     }
                 }
         );
@@ -347,6 +348,16 @@ public class MainActivity extends AppCompatActivity {
         rlGameActivity.launch(intent);
 
 
+    }
+
+    protected void deleteStoredFiles(){
+        File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (dir.isDirectory()){
+            String[] imgFiles = dir.list();
+            for (int i = 0; i < imgFiles.length; i++){
+                new File(dir, imgFiles[i]).delete();
+            }
+        }
     }
 
 
