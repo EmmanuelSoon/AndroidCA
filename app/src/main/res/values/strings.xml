@@ -7,4 +7,5 @@
     <string name="welcomeText">Welcome To MemOink!!!</string>
     <string name="enterGame">Enter Game</string>
     <string name="viewRankings">View Rankings</string>
+    <string name="enterYourName">Please Enter Your Name</string>
 </resources>
