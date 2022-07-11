@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AndroidCA</string>
+    <string name="app_name">MemOink</string>
     <string name="fetchBtn">Fetch</string>
     <string name="urlPrompt">Enter Url to get image</string>
     <string name="defaultUrl">https://stocksnap.io</string>
