@@ -10,28 +10,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcomeText"
-        android:textSize="40sp"
-        android:fontFamily="@font/welcomeFont"
-        android:textColor="#E91E63"
+        android:textSize="30sp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:textColor="@color/crazyPink"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:gravity="center"/>
+        android:layout_marginTop="20dp"/>
 
     <pl.droidsonroids.gif.GifImageView
         android:layout_width="380dp"
         android:layout_height="378dp"
         android:layout_gravity="center"
         android:src="@drawable/piggy" />
-    <Button
-        style="@style/btnStyle"
-        android:id="@+id/viewRankingBtn"
-        android:layout_height="wrap_content"
-        android:text="@string/viewRankings" />
+
     <Button
         style="@style/btnStyle"
         android:id="@+id/enterBtn"
         android:layout_height="wrap_content"
         android:text="@string/enterGame"/>
 
-
+    <Button
+        style="@style/btnStyle"
+        android:id="@+id/viewRankingBtn"
+        android:layout_height="wrap_content"
+        android:text="@string/viewRankings" />
 </LinearLayout>
