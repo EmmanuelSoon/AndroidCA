@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isDownloading;
     private String[] cardFiles;
 
+    private ActivityResultLauncher<Intent> rlGameActivity;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,14 @@ public class MainActivity extends AppCompatActivity {
         textInput = findViewById(R.id.editText);
         myGrid = findViewById(R.id.grid_layout);
         isDownloading = false;
+
+        rlGameActivity = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+                        System.out.println("delete filessss");
+                    }
+                }
+        );
 
         fetch = findViewById(R.id.btnFetch);
         fetch.setOnClickListener((view -> {
@@ -331,9 +341,10 @@ public class MainActivity extends AppCompatActivity {
 
     protected void runNextActivity(){
 
+
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("cardFiles", cardFiles);
-        startActivity(intent);
+        rlGameActivity.launch(intent);
 
 
     }

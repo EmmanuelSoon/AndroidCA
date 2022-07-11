@@ -158,6 +158,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // response to main activity
+                        setResult(RESULT_OK, new Intent());
                         finish();
                     }
                 })
