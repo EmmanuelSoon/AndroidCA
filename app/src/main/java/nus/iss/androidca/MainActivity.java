@@ -1,13 +1,17 @@
 package nus.iss.androidca;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -56,17 +60,18 @@ public class MainActivity extends AppCompatActivity {
     private Button fetch, start, stop;
     private ProgressDialog progressBar;
     private int progressBarStatus = 0;
-    private int fileCount = 0;
+    private int fileCount =0;
     private Handler progressBarHandler = new Handler();
     private Runnable progressBarRunner;
     private Context context;
 
-    private List<String> selectedBitmap = new ArrayList<>();
+    private List<Integer> selectedBitmap = new ArrayList<>();
     private List<Bitmap> myBitmaps = new ArrayList<>();
     private Thread bkgdThread;
     private androidx.gridlayout.widget.GridLayout myGrid;
-    private int count;
+
     private boolean isDownloading;
+    private String[] cardFiles;
 
 
     @Override
@@ -105,14 +110,17 @@ public class MainActivity extends AppCompatActivity {
     private void runStart(){
         boolean downloaded = downloadImage(myBitmaps, selectedBitmap);
         Toast msg;
-        if (downloaded) {
-            msg = Toast.makeText(MainActivity.this,
-                    "Download Success", Toast.LENGTH_LONG);
-        } else {
+        if (!downloaded) {
             msg = Toast.makeText(MainActivity.this,
                     "Download Failed", Toast.LENGTH_LONG);
+            msg.show();
+            return;
+
+        } else {
+            msg = Toast.makeText(MainActivity.this,
+                    "Download Success", Toast.LENGTH_LONG);
         }
-        msg.show();
+        runNextActivity();
     }
 
     private void runFetch(View view){
@@ -167,11 +175,13 @@ public class MainActivity extends AppCompatActivity {
         Elements elements = doc.getElementsByTag("img");
         List<String> urls = elements.stream()
                 .map(x -> x.absUrl("src"))
+                //To implement ability to search other websties that don't hold .jpg images
                 .filter(x -> x.substring(x.length() - 4).equals(".jpg"))
                 .limit(20)
                 .collect(Collectors.toList());
 
         ArrayList<Bitmap> bitmaps  = new ArrayList<>();
+        fileCount = 0;
         for (String imgURL : urls) {
             try {
                 if(!isDownloading) break;
@@ -181,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
                 bitmaps.add(myBitmap);
                 fileCount++;
+                setViews(myBitmap, fileCount);
                 updateProgressBar(fileCount);
-                setViews(myBitmap);
             }  catch (IOException e) {
                 e.printStackTrace();
             }
@@ -200,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //show image in gridlayout
-    protected void setViews(Bitmap myBitmap) {
+    protected void setViews(Bitmap myBitmap, int fileCount) {
         androidx.gridlayout.widget.GridLayout myGrid = findViewById(R.id.grid_layout);
 
         runOnUiThread(new Runnable() {
@@ -213,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
                 RelativeLayout.LayoutParams layoutPara = new RelativeLayout.LayoutParams(imageview.getLayoutParams());
                 layoutPara.setMargins(10, 5, 10, 5);
                 imageview.setLayoutParams(layoutPara);
+                imageview.setId(View.generateViewId());
                 imageview.setTag(fileCount);
                 imageview.isShown();
                 myGrid.addView(imageview);
@@ -228,16 +239,16 @@ public class MainActivity extends AppCompatActivity {
         Button start = findViewById(R.id.start_btn);
 
         start.setVisibility(View.VISIBLE);
-        if (selectedBitmap.contains(imageview.getTag().toString())){
+        if (selectedBitmap.contains(imageview.getId())){
             imageview.clearColorFilter();
-            selectedBitmap.remove(imageview.getTag().toString());
+            selectedBitmap.remove(Integer.valueOf(imageview.getId()));
             if( selectedBitmap.size() < 6){
                 start.setEnabled(false);
             }
         }
         //do a check for selected size, cannot select unless there is less than 6 items. to change when difficulty level is implemented
         else if (selectedBitmap.size() < 6) {
-            selectedBitmap.add(imageview.getTag().toString());
+            selectedBitmap.add(imageview.getId());
             imageview.setColorFilter(Color.argb(175, 255, 255, 255));
             if (selectedBitmap.size() == 6) {
                 start.setEnabled(true);
@@ -261,50 +272,6 @@ public class MainActivity extends AppCompatActivity {
         fileCount = 0;
     }
 
-    private void setProgressBarStatus(List<Bitmap> myBitmaps){
-        while (progressBarStatus < 100) {
-
-            progressBarStatus = myBitmaps.size() * 5;
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            progressBarHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    progressBar.setProgress(progressBarStatus);
-                }
-            });
-        }
-    }
-
-    private void fetchProgressBar(int fileCount) {
-        if (progressBarStatus < 20) {
-
-            progressBarStatus = fileCount;
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            progressBarHandler.post(progressBarRunner = new Runnable() {
-                @Override
-                public void run() {
-                    progressBar.setProgress(progressBarStatus);
-                }
-            });
-
-            if (progressBarStatus >= 20) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                progressBar.dismiss();
-            }
-        }
-    }
 
     protected boolean isUrl(String url) {
         try {
@@ -318,16 +285,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    protected boolean downloadImage(List<Bitmap> myBitmaps, List<String> selectedBitmap) {
+    protected boolean downloadImage(List<Bitmap> myBitmaps, List<Integer> selectedBitmap) {
 
         try {
+            cardFiles = new String[myBitmaps.size()];
             File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            for (String i : selectedBitmap) {
+            for (int i = 0; i < selectedBitmap.size(); i++) {
 
                 String filename = UUID.randomUUID().toString() + i;
                 File myFile = new File(dir, filename);
 
-                Bitmap bitmap = myBitmaps.get(Integer.parseInt(i));
+                ImageView imageView = findViewById(selectedBitmap.get(i));
+                int index = Integer.parseInt(imageView.getTag().toString());
+                Bitmap bitmap = myBitmaps.get(index);
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
                 byte[] bitmapData = bos.toByteArray();
@@ -336,6 +306,8 @@ public class MainActivity extends AppCompatActivity {
                 fos.write(bitmapData);
                 fos.flush();
                 fos.close();
+
+                cardFiles[i] = myFile.getAbsolutePath();
 
             }
         } catch (Exception e) {
@@ -349,13 +321,20 @@ public class MainActivity extends AppCompatActivity {
     protected void cleanUp() {
 
         if (myBitmaps != null) myBitmaps.clear();
-
         if (selectedBitmap != null) selectedBitmap.clear();
-
         if (progressBar != null) {
             progressBar.cancel();
             progressBar.setProgress(0);
         }
+
+    }
+
+    protected void runNextActivity(){
+
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("cardFiles", cardFiles);
+        startActivity(intent);
+
 
     }
 
