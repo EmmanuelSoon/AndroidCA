@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import nus.iss.androidca.service.BgmService;
+
 public class GameActivity extends AppCompatActivity implements GameFragment.IGameFragment{
 
     private TextView txtScore;
@@ -73,47 +75,10 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         GameFragment fragment = (GameFragment) fm.findFragmentById(R.id.fragment_game);
         fragment.setBitmaps(bitmaps, defaultBitmaps);
 
-        restartMusic();
-    }
-
-    private void restartMusic(){
-        if(mp == null){
-            mp = MediaPlayer.create(this, R.raw.bgm);
-        }
-        if (!mp.isPlaying()) {
-            mp.setLooping(true);
-            mp.seekTo(0);
-            mp.start();
-            startFadeIn();
-        }
+        startMusic();
     }
 
 
-    private void startFadeIn(){
-        final int FADE_DURATION = 2000;
-        final int FADE_INTERVAL = 200;
-        final int MAX_VOLUME = 1;
-        int numberOfSteps = FADE_DURATION/FADE_INTERVAL;
-        final float deltaVolume = MAX_VOLUME / (float)numberOfSteps;
-
-        final Timer timer = new Timer(true);
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                fadeInStep(deltaVolume);
-                if(volume>=1f){
-                    timer.cancel();
-                    timer.purge();
-                }
-            }
-        };
-        timer.schedule(timerTask,FADE_INTERVAL,FADE_INTERVAL);
-    }
-
-    private void fadeInStep(float deltaVolume){
-        mp.setVolume(volume, volume);
-        volume += deltaVolume;
-    }
 
     private void runTimer() {
         TextView txtTime = findViewById(R.id.timer);
@@ -143,7 +108,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
             Toast.makeText(this, "Match!", Toast.LENGTH_SHORT).show();
         }
         else if(content.equals("over")) {
-            mp.pause();
+            pauseMusic();
             onStop= true;
             handler.removeCallbacksAndMessages(null);
             ArrayList<Integer> rankingList = tinydb.getListInt("rankingList");
@@ -202,7 +167,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
                         startTime = 0;
                         onStop= false;
                         runTimer();
-                        restartMusic();
+                        startMusic();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -277,9 +242,26 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
     @Override
     public void onBackPressed(){
         super.onBackPressed();
-        if(mp.isPlaying()){
-            mp.stop();
-        }
-        mp.release();
+
+        Intent intent = new Intent(this, BgmService.class);
+        intent.setAction("play");
+        intent.putExtra("location", "home");
+        startService(intent);
     }
+
+
+    protected void startMusic(){
+        Intent intent = new Intent(this, BgmService.class);
+        intent.setAction("play");
+        intent.putExtra("location", "game");
+        startService(intent);
+    }
+
+    private void pauseMusic(){
+        Intent intent = new Intent(this, BgmService.class);
+        intent.setAction("pause");
+        startService(intent);
+    }
+
+
 }

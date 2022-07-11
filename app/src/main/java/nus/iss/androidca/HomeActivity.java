@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import nus.iss.androidca.service.BgmService;
+
 public class HomeActivity extends AppCompatActivity {
 
     private Button enter;
@@ -38,6 +40,11 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Intent intent = new Intent(this, BgmService.class);
+        intent.setAction("play");
+        intent.putExtra("location", "home");
+        startService(intent);
 
     }
 }
