@@ -41,9 +41,17 @@ public class RankListViewAdapter extends ArrayAdapter<Object> {
         userName.setText(rankinglist.get(rowPos).getUserName());
 
         TextView score = convertView.findViewById(R.id.rankingListScore);
-        score.setText(rankinglist.get(rowPos).getScore().toString());
+        score.setText(convertScoretoMMSSformat(rankinglist.get(rowPos).getScore()));
 
         return convertView;
+    }
+
+    private String convertScoretoMMSSformat(Integer actualSeconds)
+    {
+        Integer seconds = actualSeconds % 60;
+        Integer minutes = actualSeconds / 60;
+        return ((minutes < 10 ? ("0" + minutes).toString(): minutes.toString()).toString()) +
+                (":") + ((seconds < 10 ? ("0" + seconds).toString(): seconds.toString()).toString());
     }
 
 
