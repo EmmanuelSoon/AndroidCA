@@ -49,7 +49,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private Context context;
 
     private List<Integer> selectedBitmap = new ArrayList<>();
-    private List<Bitmap> myBitmaps = new ArrayList<>();
+    private Map<Integer, Bitmap> myBitmaps = new HashMap<>();
     private Thread bkgdThread;
     private androidx.gridlayout.widget.GridLayout myGrid;
 
@@ -134,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void runFetch(View view){
+        //hiding button on fetch due to bug on re-fetch if images have already been selected button won't hide again
+        start.setVisibility(View.GONE);
+        start.setEnabled(false);
+
         GridLayout myGrid = findViewById(R.id.grid_layout);
 
         if (!isUrl(textInput.getText().toString())) {
@@ -168,13 +174,13 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if(Thread.interrupted()) return;
                 isDownloading =true;
-                myBitmaps = scrapeUrlsForBitmaps(textInput.getText().toString());
+                scrapeUrlsForBitmaps(textInput.getText().toString());   //myBitmaps
             }
         });
         bkgdThread.start();
     }
 
-    protected List<Bitmap> scrapeUrlsForBitmaps(String urlInput) {
+    protected void scrapeUrlsForBitmaps(String urlInput) {
         org.jsoup.nodes.Document doc = null;
         try {
             doc = Jsoup.connect(urlInput).get();
@@ -190,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 .limit(20)
                 .collect(Collectors.toList());
 
-        ArrayList<Bitmap> bitmaps  = new ArrayList<>();
+       // ArrayList<Bitmap> bitmaps  = new ArrayList<>(); //mybitmaps
         fileCount = 0;
         for (String imgURL : urls) {
             try {
@@ -199,15 +205,15 @@ public class MainActivity extends AppCompatActivity {
                 URLConnection conn = url.openConnection();
                 InputStream input = conn.getInputStream();
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                bitmaps.add(myBitmap);
+      //          bitmaps.add(myBitmap);      //myBitmap
                 fileCount++;
-                setViews(myBitmap, fileCount);
+                setViews(myBitmap);
                 updateProgressBar(fileCount);
             }  catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return bitmaps;
+      //  return bitmaps;
     }
 
     private void updateProgressBar(int fileCount){
@@ -220,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //show image in gridlayout
-    protected void setViews(Bitmap myBitmap, int fileCount) {
+    protected void setViews(Bitmap myBitmap) {
         androidx.gridlayout.widget.GridLayout myGrid = findViewById(R.id.grid_layout);
 
         runOnUiThread(new Runnable() {
@@ -234,8 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 layoutPara.setMargins(10, 5, 10, 5);
                 imageview.setLayoutParams(layoutPara);
                 imageview.setId(View.generateViewId());
-                imageview.setTag(fileCount);
-                imageview.isShown();
+                myBitmaps.put(imageview.getId(), myBitmap);
                 myGrid.addView(imageview);
 
                 imageview.setOnClickListener((view) -> {
@@ -304,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    protected boolean downloadImage(List<Bitmap> myBitmaps, List<Integer> selectedBitmap) {
+    protected boolean downloadImage(Map<Integer, Bitmap> myBitmaps, List<Integer> selectedBitmap) {
 
         try {
             cardFiles = new String[myBitmaps.size()];
@@ -315,8 +320,8 @@ public class MainActivity extends AppCompatActivity {
                 File myFile = new File(dir, filename);
 
                 ImageView imageView = findViewById(selectedBitmap.get(i));
-                int index = Integer.parseInt(imageView.getTag().toString());
-                Bitmap bitmap = myBitmaps.get(index);
+                Integer key = imageView.getId();
+                Bitmap bitmap = myBitmaps.get(key);
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
                 byte[] bitmapData = bos.toByteArray();
