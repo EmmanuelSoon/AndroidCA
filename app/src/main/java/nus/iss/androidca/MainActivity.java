@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
                     myGrid.removeAllViews();
                     cleanUp();
                     setBkgdThread();
-                    createProgressBarDialog(view);
                 }
             }, 1000);
         }
@@ -189,21 +188,23 @@ public class MainActivity extends AppCompatActivity {
 
     protected void scrapeUrlsForBitmaps(String urlInput) {
         org.jsoup.nodes.Document doc = null;
+        List<String> urls = new ArrayList<>();
         try {
             doc = Jsoup.connect(urlInput).get();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            Elements elements = doc.getElementsByTag("img");
 
-        Elements elements = doc.getElementsByTag("img");
-        List<String> urls = elements.stream()
+            urls = elements.stream()
                 .map(x -> x.absUrl("src"))
-                //To implement ability to search other websties that don't hold .jpg images
                 .filter(x -> !x.endsWith(".svg"))
                 .limit(20)
                 .collect(Collectors.toList());
 
-       // ArrayList<Bitmap> bitmaps  = new ArrayList<>(); //mybitmaps
+        } catch (IOException e) {
+            e.printStackTrace();
+            progressBar.cancel();
+            return;
+        }
+
         fileCount = 0;
         for (String imgURL : urls) {
             try {
@@ -212,7 +213,6 @@ public class MainActivity extends AppCompatActivity {
                 URLConnection conn = url.openConnection();
                 InputStream input = conn.getInputStream();
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
-      //          bitmaps.add(myBitmap);      //myBitmap
                 fileCount++;
                 setViews(myBitmap);
                 updateProgressBar(fileCount);
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-      //  return bitmaps;
+
     }
 
     private void updateProgressBar(int fileCount){
@@ -372,15 +372,7 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
     }
 
-
-
-//    protected void stopMusic(){
-//        Intent serviceIntent = new Intent(MainActivity.this, BgmService.class);
-//        serviceIntent.setAction("play");
-//        serviceIntent.putExtra("location", "game");
-//        startService(serviceIntent);
-//    }
-
+    
 
     protected void runNextActivity(){
 
