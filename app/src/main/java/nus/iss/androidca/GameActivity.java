@@ -21,18 +21,22 @@ import android.widget.Toast;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity implements GameFragment.IGameFragment{
 
-    TextView txtScore;
-    int matchCounter;
-    int startTime;
-    Handler handler = new Handler();
+    private TextView txtScore;
+    private int matchCounter;
+    private int startTime;
+    private Handler handler = new Handler();
     private boolean onStop = false;
-    SharedPreferences userHighScoreDetails;
-    TinyDB tinydb;
-    Integer playerRankSize = 0;
-    MediaPlayer mp;
+    private SharedPreferences userHighScoreDetails;
+    private TinyDB tinydb;
+    private Integer playerRankSize = 0;
+    private MediaPlayer mp;
+    private float volume = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +82,35 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         if (!mp.isPlaying()){
             mp.setLooping(true);
             mp.start();
+            startFadeIn();
         }
+    }
+
+
+    private void startFadeIn(){
+        final int FADE_DURATION = 2000;
+        final int FADE_INTERVAL = 200;
+        final int MAX_VOLUME = 1;
+        int numberOfSteps = FADE_DURATION/FADE_INTERVAL;
+        final float deltaVolume = MAX_VOLUME / (float)numberOfSteps;
+
+        final Timer timer = new Timer(true);
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                fadeInStep(deltaVolume);
+                if(volume>=1f){
+                    timer.cancel();
+                    timer.purge();
+                }
+            }
+        };
+        timer.schedule(timerTask,FADE_INTERVAL,FADE_INTERVAL);
+    }
+
+    private void fadeInStep(float deltaVolume){
+        mp.setVolume(volume, volume);
+        volume += deltaVolume;
     }
 
     private void runTimer() {
