@@ -44,14 +44,14 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         runTimer();
         tinydb = new TinyDB(this);
         Intent intent = getIntent();
-        /*
+
         String[] cardFiles = intent.getStringArrayExtra("cardFiles");
         Bitmap[] bitmaps = processDownloadedImage(cardFiles);
         if (bitmaps == null) {
             // if there is a error when converting file to bitmap
             finish();
         }
-        */
+        /*
         // send data to our fragment
         Bitmap[] bitmaps = new Bitmap[6];
         bitmaps[0] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card1);
@@ -59,7 +59,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         bitmaps[2] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card3);
         bitmaps[3] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card4);
         bitmaps[4] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card5);
-        bitmaps[5] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card6);
+        bitmaps[5] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card6);*/
         Bitmap defaultBitmaps = BitmapFactory.decodeResource(this.getResources(), R.drawable.cardback);
         FragmentManager fm = getSupportFragmentManager();
         GameFragment fragment = (GameFragment) fm.findFragmentById(R.id.fragment_game);
@@ -208,7 +208,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
     }
 
     private Bitmap[] processDownloadedImage(String[] path) {
-        if (path == null || path.length != 6) {
+        if (path == null) {
             return null;
         }
         Bitmap[] bitmaps = new Bitmap[6];
