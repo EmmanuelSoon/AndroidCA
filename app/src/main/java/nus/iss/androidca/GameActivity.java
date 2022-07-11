@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,6 +43,15 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         txtScore.setText(matchCounter + " of 6 matches");
         runTimer();
         tinydb = new TinyDB(this);
+        Intent intent = getIntent();
+        /*
+        String[] cardFiles = intent.getStringArrayExtra("cardFiles");
+        Bitmap[] bitmaps = processDownloadedImage(cardFiles);
+        if (bitmaps == null) {
+            // if there is a error when converting file to bitmap
+            finish();
+        }
+        */
         // send data to our fragment
         Bitmap[] bitmaps = new Bitmap[6];
         bitmaps[0] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card1);
@@ -197,4 +207,18 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         return playerRankSize;
     }
 
+    private Bitmap[] processDownloadedImage(String[] path) {
+        if (path == null || path.length != 6) {
+            return null;
+        }
+        Bitmap[] bitmaps = new Bitmap[6];
+        for (int i = 0; i < 6; i++) {
+            Bitmap bitmap = BitmapFactory.decodeFile(path[i]);
+            if (bitmap == null) {
+                return null;
+            }
+            bitmaps[i] = bitmap;
+        }
+        return bitmaps;
+    }
 }
