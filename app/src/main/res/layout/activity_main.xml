@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <EditText
         android:id="@+id/editText"
         android:layout_width="0dp"
@@ -22,19 +23,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/fetchBtn"
-        app:layout_constraintLeft_toRightOf="@id/btnStop"
+        app:layout_constraintLeft_toRightOf="@id/editText"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnStop"
-        android:text="stop"
-        app:layout_constraintLeft_toRightOf="@id/editText"
-        app:layout_constraintRight_toLeftOf="@+id/btnFetch"
-        app:layout_constraintTop_toTopOf="parent"/>
-
 
 
     <androidx.gridlayout.widget.GridLayout
@@ -45,6 +36,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editText"
+        app:layout_constraintBottom_toTopOf="@id/start_btn"
         app:columnCount="4"
         app:rowCount="5" >
 
@@ -57,19 +49,8 @@
         android:text="START"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/progress_bar" />
-
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="@android:style/Widget.Material.Light.ProgressBar.Horizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/grid_layout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:visibility="visible" />
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -100,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
             runFetch(view);
         }));
 
-        Button stop = findViewById(R.id.btnStop);
-        stop.setOnClickListener((view -> runStop()));
 
         start = findViewById(R.id.start_btn);
         start.setVisibility(View.GONE);
@@ -276,6 +275,15 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressBar.setProgress(0);
         progressBar.setMax(20);
+
+        progressBar.setButton(DialogInterface.BUTTON_NEGATIVE,
+                "Stop",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        runStop();
+                    }
+                });
         progressBar.show();
 
         //reset progress bar and filesize status
