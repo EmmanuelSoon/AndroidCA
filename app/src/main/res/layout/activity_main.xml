@@ -36,6 +36,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editText"
+        app:layout_constraintBottom_toTopOf="@id/start_btn"
         app:columnCount="4"
         app:rowCount="5" >
 
