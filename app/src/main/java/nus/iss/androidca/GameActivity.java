@@ -66,7 +66,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         FragmentManager fm = getSupportFragmentManager();
         GameFragment fragment = (GameFragment) fm.findFragmentById(R.id.fragment_game);
         fragment.setBitmaps(bitmaps, defaultBitmaps);
-
+        */
         restartMusic();
     }
 
