@@ -241,7 +241,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 ImageView imageview = new ImageView(MainActivity.this);
-                imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(250, 300));
+                int width = MainActivity.this.getWindow().getDecorView().getWidth();
+                int height = MainActivity.this.getWindow().getDecorView().getHeight();
+                int fetchBtnHeight = fetch.getHeight();
+                int resizableWidth = (width-80)/4;
+                int resizableHeight = (int)(height-(fetchBtnHeight+100+(height*0.2)))/5;
+                imageview.setLayoutParams(new android.view.ViewGroup.LayoutParams(resizableWidth, resizableHeight));
                 imageview.setImageBitmap(myBitmap);
                 imageview.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 RelativeLayout.LayoutParams layoutPara = new RelativeLayout.LayoutParams(imageview.getLayoutParams());

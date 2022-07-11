@@ -8,29 +8,37 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1.2"
         android:text="@string/welcomeText"
-        android:textSize="30sp"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:textColor="@color/crazyPink"
+        android:textSize="40sp"
+        android:fontFamily="@font/welcomefont"
+        android:gravity="center"
+        android:textColor="#E91E63"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"/>
 
     <pl.droidsonroids.gif.GifImageView
         android:layout_width="380dp"
-        android:layout_height="378dp"
+        android:layout_height="0dp"
+        android:layout_weight="4"
         android:layout_gravity="center"
         android:src="@drawable/piggy" />
 
     <Button
         style="@style/btnStyle"
-        android:id="@+id/enterBtn"
-        android:layout_height="wrap_content"
-        android:text="@string/enterGame"/>
-
+        android:id="@+id/viewRankingBtn"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:text="@string/viewRankings"
+        android:layout_marginBottom="15dp"/>
     <Button
         style="@style/btnStyle"
-        android:id="@+id/viewRankingBtn"
-        android:layout_height="wrap_content"
-        android:text="@string/viewRankings" />
+        android:id="@+id/enterBtn"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:layout_marginBottom="30dp"
+        android:text="@string/enterGame"/>
+
+
 </LinearLayout>
