@@ -75,49 +75,10 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         GameFragment fragment = (GameFragment) fm.findFragmentById(R.id.fragment_game);
         fragment.setBitmaps(bitmaps, defaultBitmaps);
 
-       //using the bgm service for music instead
         startMusic();
-       // restartMusic();
-    }
-
-    private void restartMusic(){
-        if(mp == null){
-            mp = MediaPlayer.create(this, R.raw.bgm);
-        }
-        if (!mp.isPlaying()) {
-            mp.setLooping(true);
-            mp.seekTo(0);
-            mp.start();
-            startFadeIn();
-        }
     }
 
 
-    private void startFadeIn(){
-        final int FADE_DURATION = 2000;
-        final int FADE_INTERVAL = 200;
-        final int MAX_VOLUME = 1;
-        int numberOfSteps = FADE_DURATION/FADE_INTERVAL;
-        final float deltaVolume = MAX_VOLUME / (float)numberOfSteps;
-
-        final Timer timer = new Timer(true);
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                fadeInStep(deltaVolume);
-                if(volume>=1f){
-                    timer.cancel();
-                    timer.purge();
-                }
-            }
-        };
-        timer.schedule(timerTask,FADE_INTERVAL,FADE_INTERVAL);
-    }
-
-    private void fadeInStep(float deltaVolume){
-        mp.setVolume(volume, volume);
-        volume += deltaVolume;
-    }
 
     private void runTimer() {
         TextView txtTime = findViewById(R.id.timer);
@@ -147,7 +108,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
             Toast.makeText(this, "Match!", Toast.LENGTH_SHORT).show();
         }
         else if(content.equals("over")) {
-            mp.pause();
+            pauseMusic();
             onStop= true;
             handler.removeCallbacksAndMessages(null);
             ArrayList<Integer> rankingList = tinydb.getListInt("rankingList");
@@ -206,7 +167,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
                         startTime = 0;
                         onStop= false;
                         runTimer();
-                        restartMusic();
+                        startMusic();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -282,12 +243,6 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
     public void onBackPressed(){
         super.onBackPressed();
 
-//commented out this part for bgm service
-//        if(mp.isPlaying()){
-//            mp.stop();
-//        }
-//        mp.release();
-
         Intent intent = new Intent(this, BgmService.class);
         intent.setAction("play");
         intent.putExtra("location", "home");
@@ -299,6 +254,12 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         Intent intent = new Intent(this, BgmService.class);
         intent.setAction("play");
         intent.putExtra("location", "game");
+        startService(intent);
+    }
+
+    private void pauseMusic(){
+        Intent intent = new Intent(this, BgmService.class);
+        intent.setAction("pause");
         startService(intent);
     }
 
