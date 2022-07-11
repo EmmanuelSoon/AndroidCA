@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +27,10 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
     int startTime;
     Handler handler = new Handler();
     private boolean onStop = false;
+    SharedPreferences userHighScoreDetails;
     TinyDB tinydb;
+    Integer playerRankSize = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,30 +101,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
             tinydb.putListInt("rankingList", rankingList);
             txtScore.setText("Game Over!");
             Toast.makeText(this, "You Win!", Toast.LENGTH_LONG).show();
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this)
-                    .setTitle("Congratulations! You Win!")
-                    .setMessage(msg + "\nDo you want to play again?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            FragmentManager fm = getSupportFragmentManager();
-                            GameFragment fragment = (GameFragment) fm.findFragmentById(R.id.fragment_game);
-                            fragment.reStartGame();
-                            initGameAttribute();
-                            startTime = 0;
-                            onStop= false;
-                            runTimer();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            // response to main activity
-                            finish();
-                        }
-                    })
-                    .setIcon(R.drawable.card1);
-            dlg.show();
+            showPopuptoPlayer(startTime, msg);
         }
     }
 
@@ -144,4 +126,75 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         }
         return lo;
     }
+
+    private void showPlayAgainAlert(String msg)
+    {
+        AlertDialog.Builder dlg = new AlertDialog.Builder(this)
+                .setTitle("Congratulations! You Win!")
+                .setMessage(msg + "\nDo you want to play again?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        FragmentManager fm = getSupportFragmentManager();
+                        GameFragment fragment = (GameFragment) fm.findFragmentById(R.id.fragment_game);
+                        fragment.reStartGame();
+                        initGameAttribute();
+                        startTime = 0;
+                        onStop= false;
+                        runTimer();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // response to main activity
+                        finish();
+                    }
+                })
+                .setIcon(R.drawable.card1);
+        dlg.show();
+    }
+
+    private void showPopuptoPlayer(Integer startTime, String msg) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(GameActivity.this);
+        final View customLayout = getLayoutInflater().inflate(R.layout.text_alert, null);
+        alertDialog.setView(customLayout);
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // send data from the AlertDialog to the Activity
+                EditText editText = customLayout.findViewById(R.id.UserInput);
+                String username ;
+
+                if(editText.getText() != null && !editText.getText().toString().trim().equals(""))
+                {
+                    username = editText.getText().toString();
+                }
+                else
+                {
+                    username = "???";
+                }
+                userHighScoreDetails = getSharedPreferences("userHighScoreDetails",MODE_PRIVATE);
+                SharedPreferences.Editor editor = userHighScoreDetails.edit();
+                editor.putString(("userName" + getplayerRankSize()),username);
+                editor.putInt(("userTime" + getplayerRankSize()),startTime);
+                editor.commit();
+                showPlayAgainAlert(msg);
+            }
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
+
+    private Integer getplayerRankSize()
+    {
+        while(userHighScoreDetails.contains("userName" + playerRankSize))
+        {
+            playerRankSize += 1;
+        }
+
+        return playerRankSize;
+    }
+
 }

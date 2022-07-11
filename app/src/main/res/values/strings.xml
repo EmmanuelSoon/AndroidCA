@@ -3,5 +3,6 @@
     <string name="fetchBtn">Fetch</string>
     <string name="urlPrompt">Enter Url to get image</string>
     <string name="defaultUrl">https://stocksnap.io</string>
+    <string name="viewRankingTitles">Username \t \t \t \t Score</string>
 
 </resources>

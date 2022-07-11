@@ -22,8 +22,8 @@
 
 
     <pl.droidsonroids.gif.GifImageView
-        android:layout_width="400dp"
-        android:layout_height="410dp"
+        android:layout_width="380dp"
+        android:layout_height="378dp"
         android:layout_gravity="center"
         android:src="@drawable/pig_logo" />
 
@@ -33,8 +33,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="20dp"
         android:text="Enter Game" />
+
+    <Button
+        android:id="@+id/viewRankingBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="VIEW RANKINGS"
+        android:textSize="20sp" />
 
 
 </LinearLayout>

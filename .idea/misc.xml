@@ -5,9 +5,11 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1442986881937437" />
         <entry key="..\:/AndroidCA/app/src/main/res/layout/activity_game.xml" value="0.24954710144927536" />
+        <entry key="..\:/AndroidCA/app/src/main/res/layout/fragment_game.xml" value="0.3183876811594203" />
         <entry key="..\:/Users/65834/Documents/GitHub/AndroidCA/app/src/main/res/layout/activity_home.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/65834/Documents/GitHub/AndroidCA/app/src/main/res/layout/activity_main.xml" value="0.3333333333333333" />
-        <entry key="..\:/AndroidCA/app/src/main/res/layout/fragment_game.xml" value="0.3183876811594203" />
+        <entry key="..\:/Users/KRISH/AndroidStudioProjects/AndroidCA/app/src/main/res/layout/activity_view_ranking.xml" value="0.19270833333333334" />
+        <entry key="..\:/Users/KRISH/AndroidStudioProjects/AndroidCA/app/src/main/res/layout/ranklinglist_row.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_game.xml" value="0.3428442028985507" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_game.xml" value="0.3428442028985507" />

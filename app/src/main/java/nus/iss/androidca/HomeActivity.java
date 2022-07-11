@@ -11,12 +11,14 @@ import android.widget.Toast;
 public class HomeActivity extends AppCompatActivity {
 
     private Button enter;
+    private Button viewRankingBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         enter = findViewById(R.id.enterBtn);
+        viewRankingBtn = findViewById(R.id.viewRankingBtn);
 
         enter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,6 +30,14 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        viewRankingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, ViewRankingActivity.class);
+                Toast.makeText(HomeActivity.this, "Rankings!",Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+            }
+        });
 
     }
 }
