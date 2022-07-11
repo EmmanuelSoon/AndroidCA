@@ -115,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         if(isDownloading){
             bkgdThread.interrupt();
             isDownloading = false;
-            cleanUp();
         }
     }
 
@@ -163,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             myGrid.removeAllViews();
+            cleanUp();
             setBkgdThread();
             createProgressBarDialog(view);
         }
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         List<String> urls = elements.stream()
                 .map(x -> x.absUrl("src"))
                 //To implement ability to search other websties that don't hold .jpg images
-                .filter(x -> x.substring(x.length() - 4).equals(".jpg"))
+                .filter(x -> !x.endsWith(".svg"))
                 .limit(20)
                 .collect(Collectors.toList());
 
