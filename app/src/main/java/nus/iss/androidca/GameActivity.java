@@ -155,7 +155,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
             else {
                 int rank = findRanking(secsTaken, rankingList);
                 double percentage = (1.0 - (rank*1.0)/rankingList.size())*100.0;
-                msg = String.format("You are ranked in %d and beated %.1f%% players", rank+1, percentage);
+                msg = String.format("You are ranked in %d and beat %.1f%% players", rank+1, percentage);
             }
             rankingList.add(secsTaken);
             tinydb.putListInt("rankingList", rankingList);
@@ -272,5 +272,14 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
             bitmaps[i] = bitmap;
         }
         return bitmaps;
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        if(mp.isPlaying()){
+            mp.stop();
+        }
+        mp.release();
     }
 }
