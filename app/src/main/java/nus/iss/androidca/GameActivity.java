@@ -75,7 +75,9 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         GameFragment fragment = (GameFragment) fm.findFragmentById(R.id.fragment_game);
         fragment.setBitmaps(bitmaps, defaultBitmaps);
 
-        restartMusic();
+       //using the bgm service for music instead
+        startMusic();
+       // restartMusic();
     }
 
     private void restartMusic(){
@@ -279,14 +281,26 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
     @Override
     public void onBackPressed(){
         super.onBackPressed();
-        if(mp.isPlaying()){
-            mp.stop();
-        }
-        mp.release();
+
+//commented out this part for bgm service
+//        if(mp.isPlaying()){
+//            mp.stop();
+//        }
+//        mp.release();
 
         Intent intent = new Intent(this, BgmService.class);
         intent.setAction("play");
         intent.putExtra("location", "home");
         startService(intent);
     }
+
+
+    protected void startMusic(){
+        Intent intent = new Intent(this, BgmService.class);
+        intent.setAction("play");
+        intent.putExtra("location", "game");
+        startService(intent);
+    }
+
+
 }

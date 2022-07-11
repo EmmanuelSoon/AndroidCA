@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                     "Download Success", Toast.LENGTH_LONG);
         }
 
-        stopMusic();
         runNextActivity();
     }
 
@@ -375,11 +374,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    protected void stopMusic(){
-        Intent serviceIntent = new Intent(MainActivity.this, BgmService.class);
-        serviceIntent.setAction("stop");
-        startService(serviceIntent);
-    }
+//    protected void stopMusic(){
+//        Intent serviceIntent = new Intent(MainActivity.this, BgmService.class);
+//        serviceIntent.setAction("play");
+//        serviceIntent.putExtra("location", "game");
+//        startService(serviceIntent);
+//    }
 
 
     protected void runNextActivity(){
