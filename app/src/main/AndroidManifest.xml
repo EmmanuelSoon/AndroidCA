@@ -16,11 +16,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidCA"
         tools:targetApi="31">
+        <service
+            android:name=".service.BgmService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".ViewRankingActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".HomeActivity"
             android:exported="true">
@@ -32,14 +35,10 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".GameActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>

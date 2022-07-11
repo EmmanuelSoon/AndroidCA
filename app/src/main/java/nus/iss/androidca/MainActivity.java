@@ -57,6 +57,8 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import nus.iss.androidca.service.BgmService;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText textInput;
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
                         deleteStoredFiles();
-                        System.out.println("files deleted");
+                        startMusic();
                     }
                 }
         );
@@ -133,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
             msg = Toast.makeText(MainActivity.this,
                     "Download Success", Toast.LENGTH_LONG);
         }
+
+        stopMusic();
         runNextActivity();
     }
 
@@ -356,6 +360,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    protected void startMusic(){
+        Intent intent = new Intent(this, BgmService.class);
+        intent.setAction("play");
+        intent.putExtra("location", "home");
+        startService(intent);
+    }
+
+
+
+    protected void stopMusic(){
+        Intent serviceIntent = new Intent(MainActivity.this, BgmService.class);
+        serviceIntent.setAction("stop");
+        startService(serviceIntent);
+    }
+
 
     protected void runNextActivity(){
 

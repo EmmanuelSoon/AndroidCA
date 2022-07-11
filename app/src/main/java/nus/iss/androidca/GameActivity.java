@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import nus.iss.androidca.service.BgmService;
+
 public class GameActivity extends AppCompatActivity implements GameFragment.IGameFragment{
 
     private TextView txtScore;
@@ -281,5 +283,10 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
             mp.stop();
         }
         mp.release();
+
+        Intent intent = new Intent(this, BgmService.class);
+        intent.setAction("play");
+        intent.putExtra("location", "home");
+        startService(intent);
     }
 }
