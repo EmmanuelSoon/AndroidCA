@@ -172,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
                 .collect(Collectors.toList());
 
         ArrayList<Bitmap> bitmaps  = new ArrayList<>();
-        int fileCount = 0;
         for (String imgURL : urls) {
             try {
                 if(!isDownloading) break;

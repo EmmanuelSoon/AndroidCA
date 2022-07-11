@@ -81,6 +81,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         soundIds[0] = sp.load(this.getContext(), R.raw.card_flip, 2);
         soundIds[1] = sp.load(this.getContext(), R.raw.correct, 1);
         soundIds[2] = sp.load(this.getContext(), R.raw.wrong, 1);
+        soundIds[3] = sp.load(this.getContext(), R.raw.winner, 1);
 
         View view = getView();
         if (view != null) {
@@ -116,7 +117,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
 
     private void handleFlip(int cardIndex){
         EasyFlipView card = cards.get(cardIndex);
-        sp.play(soundIds[0], 1, 1, 2, 0, 1.0F);
+        sp.play(soundIds[0], 1, 1, 3, 0, 1.0F);
 
 
         if (firstClicked < 0){
@@ -126,7 +127,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
         else {
             //Matched
             if(board.get(firstClicked).equals(board.get(cardIndex))){
-                sp.play(soundIds[1], 1, 1, 1, 0, 1.0F);
+                sp.play(soundIds[1], 1, 1, 2, 0, 1.0F);
 
 
                 card.setFlipEnabled(false);
@@ -138,6 +139,7 @@ public class GameFragment extends Fragment implements View.OnClickListener {
                 iGameFragment.itemClicked("match");
                 if (isGameOver()) {
                     //send congrats Msg
+                    sp.play(soundIds[3], 1, 1, 1, 0, 1.0F);
                     iGameFragment.itemClicked("over");
                 }
                 //Enable the button selectively.
@@ -288,4 +290,6 @@ public class GameFragment extends Fragment implements View.OnClickListener {
             }
         }, 500);
     }
+
+
 }
