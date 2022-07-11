@@ -34,7 +34,7 @@
                 android:id="@+id/front"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/black"
                 android:src="@drawable/cardback" />
 
             <ImageView
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback" />
+                android:src="@drawable/cardback1" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>
 
@@ -63,7 +63,7 @@
                 android:id="@+id/front"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/black"
                 android:src="@drawable/cardback"
                 tools:ignore="DuplicateIds" />
 
@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback"
+                android:src="@drawable/cardback1"
                 tools:ignore="DuplicateIds" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -93,7 +93,7 @@
                 android:id="@+id/front"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/black"
                 android:src="@drawable/cardback"
                 tools:ignore="DuplicateIds" />
 
@@ -102,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback"
+                android:src="@drawable/cardback1"
                 tools:ignore="DuplicateIds" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -112,7 +112,8 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
 
         <com.wajahatkarim3.easyflipview.EasyFlipView
             android:id="@+id/flipCard3"
@@ -130,7 +131,7 @@
                 android:id="@+id/front"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/black"
                 android:src="@drawable/cardback"
                 tools:ignore="DuplicateIds" />
 
@@ -139,7 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback"
+                android:src="@drawable/cardback1"
                 tools:ignore="DuplicateIds" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -169,7 +170,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback"
+                android:src="@drawable/cardback1"
                 tools:ignore="DuplicateIds" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -199,7 +200,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback"
+                android:src="@drawable/cardback1"
                 tools:ignore="DuplicateIds" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -209,7 +210,8 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
 
         <com.wajahatkarim3.easyflipview.EasyFlipView
             android:id="@+id/flipCard6"
@@ -236,7 +238,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback"
+                android:src="@drawable/cardback1"
                 tools:ignore="DuplicateIds" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -266,7 +268,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback"
+                android:src="@drawable/cardback1"
                 tools:ignore="DuplicateIds" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -296,7 +298,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback"
+                android:src="@drawable/cardback1"
                 tools:ignore="DuplicateIds" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -306,7 +308,8 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
 
         <com.wajahatkarim3.easyflipview.EasyFlipView
             android:id="@+id/flipCard9"
@@ -333,7 +336,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback"
+                android:src="@drawable/cardback1"
                 tools:ignore="DuplicateIds" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -363,7 +366,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback"
+                android:src="@drawable/cardback1"
                 tools:ignore="DuplicateIds" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>
@@ -393,7 +396,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:src="@drawable/cardback"
+                android:src="@drawable/cardback1"
                 tools:ignore="DuplicateIds" />
 
         </com.wajahatkarim3.easyflipview.EasyFlipView>

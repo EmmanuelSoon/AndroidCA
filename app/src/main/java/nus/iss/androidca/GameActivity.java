@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -31,6 +32,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
     SharedPreferences userHighScoreDetails;
     TinyDB tinydb;
     Integer playerRankSize = 0;
+    MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +61,24 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         bitmaps[2] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card3);
         bitmaps[3] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card4);
         bitmaps[4] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card5);
-        bitmaps[5] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card6);*/
-        Bitmap defaultBitmaps = BitmapFactory.decodeResource(this.getResources(), R.drawable.cardback);
+        bitmaps[5] = BitmapFactory.decodeResource(this.getResources(), R.drawable.card6);
+        */
+        Bitmap defaultBitmaps = BitmapFactory.decodeResource(this.getResources(), R.drawable.cardback1);
         FragmentManager fm = getSupportFragmentManager();
         GameFragment fragment = (GameFragment) fm.findFragmentById(R.id.fragment_game);
         fragment.setBitmaps(bitmaps, defaultBitmaps);
+
+        restartMusic();
+    }
+
+    private void restartMusic(){
+        if(mp == null){
+            mp = MediaPlayer.create(this, R.raw.bgm);
+        }
+        if (!mp.isPlaying()){
+            mp.setLooping(true);
+            mp.start();
+        }
     }
 
     private void runTimer() {
@@ -94,6 +109,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
             Toast.makeText(this, "Match!", Toast.LENGTH_SHORT).show();
         }
         else if(content.equals("over")) {
+            mp.stop();
             onStop= true;
             handler.removeCallbacksAndMessages(null);
             ArrayList<Integer> rankingList = tinydb.getListInt("rankingList");
@@ -152,6 +168,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
                         startTime = 0;
                         onStop= false;
                         runTimer();
+                        restartMusic();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
