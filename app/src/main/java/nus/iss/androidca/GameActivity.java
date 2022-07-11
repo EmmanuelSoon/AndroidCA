@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,8 +80,9 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
         if(mp == null){
             mp = MediaPlayer.create(this, R.raw.bgm);
         }
-        if (!mp.isPlaying()){
+        if (!mp.isPlaying()) {
             mp.setLooping(true);
+            mp.seekTo(0);
             mp.start();
             startFadeIn();
         }
@@ -141,7 +143,7 @@ public class GameActivity extends AppCompatActivity implements GameFragment.IGam
             Toast.makeText(this, "Match!", Toast.LENGTH_SHORT).show();
         }
         else if(content.equals("over")) {
-            mp.stop();
+            mp.pause();
             onStop= true;
             handler.removeCallbacksAndMessages(null);
             ArrayList<Integer> rankingList = tinydb.getListInt("rankingList");
