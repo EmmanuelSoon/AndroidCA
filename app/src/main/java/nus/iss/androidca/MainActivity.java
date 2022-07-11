@@ -99,8 +99,9 @@ public class MainActivity extends AppCompatActivity {
         );
 
         fetch = findViewById(R.id.btnFetch);
-        fetch.setOnClickListener((view -> {
-            runFetch(view);
+        fetch.setOnClickListener(
+                (view -> {runFetch(view);
+
         }));
 
 
@@ -122,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         boolean downloaded = downloadImage(myBitmaps, selectedBitmap);
         Toast msg;
         if (!downloaded) {
+            deleteStoredFiles();
             msg = Toast.makeText(MainActivity.this,
                     "Download Failed", Toast.LENGTH_LONG);
             msg.show();
@@ -138,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
         //hiding button on fetch due to bug on re-fetch if images have already been selected button won't hide again
         start.setVisibility(View.GONE);
         start.setEnabled(false);
+
+        deleteStoredFiles();
 
         GridLayout myGrid = findViewById(R.id.grid_layout);
 
@@ -355,11 +359,9 @@ public class MainActivity extends AppCompatActivity {
 
     protected void runNextActivity(){
 
-
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("cardFiles", cardFiles);
         rlGameActivity.launch(intent);
-
 
     }
 
@@ -372,8 +374,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }
 
 
