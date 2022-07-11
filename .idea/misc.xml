@@ -5,21 +5,14 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1442986881937437" />
         <entry key="..\:/AndroidCA/app/src/main/res/layout/activity_game.xml" value="0.24954710144927536" />
-        <entry key="..\:/Users/65834/Documents/GitHub/AndroidCA/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2165" />
-        <entry key="..\:/Users/65834/Documents/GitHub/AndroidCA/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
-        <entry key="..\:/Users/65834/Documents/GitHub/AndroidCA/app/src/main/res/font/font.xml" value="0.225" />
-        <entry key="..\:/Users/65834/Documents/GitHub/AndroidCA/app/src/main/res/font/font_logo.xml" value="0.15092592592592594" />
-        <entry key="..\:/Users/65834/Documents/GitHub/AndroidCA/app/src/main/res/layout/activity_game.xml" value="0.17604166666666668" />
+        <entry key="..\:/AndroidCA/app/src/main/res/layout/activity_home.xml" value="0.16983695652173914" />
+        <entry key="..\:/AndroidCA/app/src/main/res/layout/fragment_game.xml" value="0.3183876811594203" />
         <entry key="..\:/Users/65834/Documents/GitHub/AndroidCA/app/src/main/res/layout/activity_home.xml" value="0.16666666666666666" />
-        <entry key="..\:/Users/65834/Documents/GitHub/AndroidCA/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Users/65834/Documents/GitHub/AndroidCA/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+        <entry key="..\:/Users/65834/Documents/GitHub/AndroidCA/app/src/main/res/layout/activity_main.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/activity_game.xml" value="0.3428442028985507" />
-        <entry key="app/src/main/res/layout/activity_home.xml" value="0.2803951367781155" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_fetch_grid.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_game.xml" value="0.3428442028985507" />
         <entry key="app/src/main/res/layout/fragment_image_preview.xml" value="0.3428442028985507" />
-        <entry key="app/src/main/res/layout/text_alert.xml" value="0.2803951367781155" />
       </map>
     </option>
   </component>
