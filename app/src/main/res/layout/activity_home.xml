@@ -3,48 +3,34 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/yellow">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome To Henry's Pig"
+        android:text="@string/welcomeText"
         android:textSize="30sp"
-        android:textColor="#F44336"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:textColor="@color/crazyPink"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"/>
-
-    <!--    <ImageView-->
-<!--        android:id="@+id/pigLogo"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="405dp"-->
-<!--        android:src="@drawable/pig_logo" />-->
-
 
     <pl.droidsonroids.gif.GifImageView
         android:layout_width="380dp"
         android:layout_height="378dp"
         android:layout_gravity="center"
-        android:src="@drawable/pig_logo" />
+        android:src="@drawable/piggy" />
 
     <Button
+        style="@style/btnStyle"
         android:id="@+id/enterBtn"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="Enter Game" />
+        android:text="@string/enterGame"/>
 
     <Button
+        style="@style/btnStyle"
         android:id="@+id/viewRankingBtn"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="VIEW RANKINGS"
-        android:textSize="20sp" />
-
-
+        android:text="@string/viewRankings" />
 </LinearLayout>
